@@ -1,50 +1,13 @@
 import 'package:flutter/material.dart';
 
-class TodoScreen extends StatefulWidget {
+import '../widgets/todoTile.dart';
+
+class TodoScreen extends StatelessWidget {
   const TodoScreen({super.key});
-
-  @override
-  State<TodoScreen> createState() => _TodoScreenState();
-}
-
-class _TodoScreenState extends State<TodoScreen> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: const BoxDecoration(color: Colors.black),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Menu',
-                    style: TextStyle(color: Colors.white, fontSize: 24),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: Icon(Icons.close),
-                  ),
-                ],
-              ),
-            ),
-            const ListTile(leading: Icon(Icons.home), title: Text('Home')),
-            const ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
-            ),
-          ],
-        ),
-      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Navigator.of(context).push(
@@ -71,9 +34,7 @@ class _TodoScreenState extends State<TodoScreen> {
                       // Make menu icon tappable
                       IconButton(
                         icon: const Icon(Icons.menu, size: 28),
-                        onPressed: () {
-                          _scaffoldKey.currentState?.openDrawer();
-                        },
+                        onPressed: () {},
                       ),
                       const SizedBox(width: 4),
                       Column(
@@ -140,53 +101,13 @@ class _TodoScreenState extends State<TodoScreen> {
         ),
       ),
     );
-  }
-}
-
-class TodoTile extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final bool isDone;
-
-  const TodoTile({
-    super.key,
-    required this.title,
-    required this.subtitle,
-    this.isDone = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Checkbox(value: isDone, onChanged: (_) {}, activeColor: Colors.black),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 16,
-                decoration:
-                    isDone ? TextDecoration.lineThrough : TextDecoration.none,
-                color: isDone ? Colors.grey : Colors.black,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              subtitle,
-              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-            ),
-          ],
-        ),
-      ],
-    );
+    ;
   }
 }
 
 void showAddTodoBottomSheet(BuildContext context) {
-  final TextEditingController _titleController = TextEditingController();
-  String _selectedCategory = 'Finance';
+  final TextEditingController titleController = TextEditingController();
+  String selectedCategory = 'Finance';
 
   final Map<String, String> categories = {
     'Finance': '💰',
@@ -228,7 +149,7 @@ void showAddTodoBottomSheet(BuildContext context) {
 
                   // Title Input
                   TextField(
-                    controller: _titleController,
+                    controller: titleController,
                     decoration: const InputDecoration(
                       labelText: 'Task Title',
                       border: OutlineInputBorder(),
@@ -238,7 +159,7 @@ void showAddTodoBottomSheet(BuildContext context) {
 
                   // Category Dropdown
                   DropdownButtonFormField<String>(
-                    value: _selectedCategory,
+                    value: selectedCategory,
                     decoration: const InputDecoration(
                       labelText: 'Category',
                       border: OutlineInputBorder(),
@@ -252,7 +173,7 @@ void showAddTodoBottomSheet(BuildContext context) {
                         }).toList(),
                     onChanged: (value) {
                       setState(() {
-                        _selectedCategory = value!;
+                        selectedCategory = value!;
                       });
                     },
                   ),
@@ -263,13 +184,13 @@ void showAddTodoBottomSheet(BuildContext context) {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        final title = _titleController.text.trim();
-                        final icon = categories[_selectedCategory];
+                        final title = titleController.text.trim();
+                        final icon = categories[selectedCategory];
 
                         if (title.isNotEmpty) {
                           Navigator.pop(context, {
                             'title': title,
-                            'subtitle': '$icon $_selectedCategory',
+                            'subtitle': '$icon $selectedCategory',
                           });
                         }
                       },
@@ -277,7 +198,10 @@ void showAddTodoBottomSheet(BuildContext context) {
                         backgroundColor: Colors.black,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
-                      child: const Text('Add Todo',style: TextStyle(color: Colors.white),),
+                      child: const Text(
+                        'Add Todo',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
                 ],

@@ -3,15 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'loginScreen.dart';
 
-class WelcomeScreen extends StatefulWidget {
+class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
-
-  @override
-  State<WelcomeScreen> createState() => _WelcomeScreenState();
-}
-
-class _WelcomeScreenState extends State<WelcomeScreen> {
-  bool isChecked = true;
 
   @override
   Widget build(BuildContext context) {
@@ -50,15 +43,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Checkbox(
-                    value: isChecked,
-                    activeColor: Colors.black,
-                    onChanged: (value) {
-                      setState(() {
-                        isChecked = value ?? false;
-                      });
-                    },
-                  ),
+                  // Checkbox(
+                  //   value: isChecked,
+                  //   activeColor: Colors.black,
+                  //   onChanged: (value) {
+                  //
+                  //   },
+                  // ),
                   Expanded(
                     child: RichText(
                       text: TextSpan(
@@ -97,7 +88,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => LoginScreen()),
+                      MaterialPageRoute(builder: (context) => SignUpScreen()),
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -141,7 +132,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => SignUpScreen()),
+                      MaterialPageRoute(builder: (context) => LoginScreen()),
                     );
                   },
                   style: OutlinedButton.styleFrom(
@@ -182,5 +173,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         ),
       ),
     );
+    ;
   }
 }

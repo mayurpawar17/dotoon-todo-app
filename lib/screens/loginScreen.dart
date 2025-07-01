@@ -100,38 +100,38 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(height: 16),
 
               // Social buttons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Google
-                  Container(
-                    height: 50,
-                    width: 50,
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Image.network(
-                      'https://upload.wikimedia.org/wikipedia/commons/4/4e/Google_favicon_2015.png',
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  // Facebook
-                  Container(
-                    height: 50,
-                    width: 50,
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Image.network(
-                      'https://upload.wikimedia.org/wikipedia/commons/1/1b/Facebook_icon.svg',
-                    ),
-                  ),
-                ],
-              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     // Google
+              //     Container(
+              //       height: 50,
+              //       width: 50,
+              //       padding: const EdgeInsets.all(8),
+              //       decoration: BoxDecoration(
+              //         border: Border.all(color: Colors.grey.shade300),
+              //         borderRadius: BorderRadius.circular(12),
+              //       ),
+              //       child: Image.network(
+              //         'https://upload.wikimedia.org/wikipedia/commons/4/4e/Google_favicon_2015.png',
+              //       ),
+              //     ),
+              //     const SizedBox(width: 20),
+              //     // Facebook
+              //     Container(
+              //       height: 50,
+              //       width: 50,
+              //       padding: const EdgeInsets.all(8),
+              //       decoration: BoxDecoration(
+              //         border: Border.all(color: Colors.grey.shade300),
+              //         borderRadius: BorderRadius.circular(12),
+              //       ),
+              //       child: Image.network(
+              //         'https://upload.wikimedia.org/wikipedia/commons/1/1b/Facebook_icon.svg',
+              //       ),
+              //     ),
+              //   ],
+              // ),
 
               const SizedBox(height: 20),
 

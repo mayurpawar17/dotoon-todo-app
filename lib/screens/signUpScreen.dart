@@ -1,32 +1,7 @@
 import 'package:flutter/material.dart';
 
-class SignUpScreen extends StatefulWidget {
+class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
-
-  @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
-}
-
-class _SignUpScreenState extends State<SignUpScreen> {
-  final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-
-  bool isNameValid = false;
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
-  void validateName(String name) {
-    setState(() {
-      isNameValid = name.isNotEmpty && name.length >= 3;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,15 +27,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
               // Name field
               TextField(
-                controller: _nameController,
-                onChanged: validateName,
+                // controller: _nameController,
                 decoration: InputDecoration(
                   labelText: 'Name',
                   border: const OutlineInputBorder(),
-                  suffixIcon:
-                      isNameValid
-                          ? const Icon(Icons.check, color: Colors.green)
-                          : null,
+
                 ),
               ),
 
@@ -68,7 +39,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
               // Email field
               TextField(
-                controller: _emailController,
+                // controller: _emailController,
                 decoration: const InputDecoration(
                   labelText: 'Email',
                   border: OutlineInputBorder(),
@@ -79,7 +50,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
               // Password field
               TextField(
-                controller: _passwordController,
+                // controller: _passwordController,
                 obscureText: true,
                 decoration: const InputDecoration(
                   labelText: 'Password',
@@ -133,38 +104,38 @@ class _SignUpScreenState extends State<SignUpScreen> {
               const SizedBox(height: 16),
 
               // Social buttons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Google
-                  Container(
-                    height: 50,
-                    width: 50,
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Image.network(
-                      'https://upload.wikimedia.org/wikipedia/commons/4/4e/Google_favicon_2015.png',
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  // Facebook
-                  Container(
-                    height: 50,
-                    width: 50,
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Image.network(
-                      'https://upload.wikimedia.org/wikipedia/commons/1/1b/Facebook_icon.svg',
-                    ),
-                  ),
-                ],
-              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     // Google
+              //     Container(
+              //       height: 50,
+              //       width: 50,
+              //       padding: const EdgeInsets.all(8),
+              //       decoration: BoxDecoration(
+              //         border: Border.all(color: Colors.grey.shade300),
+              //         borderRadius: BorderRadius.circular(12),
+              //       ),
+              //       child: Image.network(
+              //         'https://upload.wikimedia.org/wikipedia/commons/4/4e/Google_favicon_2015.png',
+              //       ),
+              //     ),
+              //     const SizedBox(width: 20),
+              //     // Facebook
+              //     Container(
+              //       height: 50,
+              //       width: 50,
+              //       padding: const EdgeInsets.all(8),
+              //       decoration: BoxDecoration(
+              //         border: Border.all(color: Colors.grey.shade300),
+              //         borderRadius: BorderRadius.circular(12),
+              //       ),
+              //       child: Image.network(
+              //         'https://upload.wikimedia.org/wikipedia/commons/1/1b/Facebook_icon.svg',
+              //       ),
+              //     ),
+              //   ],
+              // ),
             ],
           ),
         ),
