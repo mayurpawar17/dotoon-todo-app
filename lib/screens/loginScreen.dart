@@ -1,3 +1,4 @@
+import 'package:dotoon_todo_app/screens/signUpScreen.dart';
 import 'package:dotoon_todo_app/screens/todoScreen.dart';
 import 'package:flutter/material.dart';
 
@@ -17,9 +18,6 @@ class LoginScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Back arrow
-              const Icon(Icons.arrow_back, size: 28),
-
               const SizedBox(height: 20),
 
               const Text(
@@ -29,12 +27,29 @@ class LoginScreen extends StatelessWidget {
 
               const SizedBox(height: 30),
 
-              // Email field
-              TextField(
-                controller: emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(),
+              Form(
+                child: Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 20),
+                      decoration: BoxDecoration(
+                        color: Color(0xffF9F9F9),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: TextFormField(
+                        controller: emailController,
+                        decoration: InputDecoration(
+                          hintText: 'Email',
+                          hintStyle: TextStyle(color: Colors.grey),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 20,
+                            horizontal: 15,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
 
@@ -83,7 +98,10 @@ class LoginScreen extends StatelessWidget {
                     ),
                     elevation: 5,
                   ),
-                  child: const Text('LOG IN', style: TextStyle(fontSize: 16)),
+                  child: const Text(
+                    'LOG IN',
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
                 ),
               ),
 
@@ -132,19 +150,25 @@ class LoginScreen extends StatelessWidget {
               //     ),
               //   ],
               // ),
-
               const SizedBox(height: 20),
 
               // Sign up suggestion
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text("Don't have an account? "),
-                  Text(
-                    "Sign up",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
+                children: [
+                  const Text("Don't have an account? "),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => SignUpScreen()),
+                      );
+                    },
+                    child: const Text(
+                      "Sign up",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],

@@ -40,44 +40,44 @@ class WelcomeScreen extends StatelessWidget {
               const Spacer(),
 
               // Terms & Checkbox
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Checkbox(
-                  //   value: isChecked,
-                  //   activeColor: Colors.black,
-                  //   onChanged: (value) {
-                  //
-                  //   },
-                  // ),
-                  Expanded(
-                    child: RichText(
-                      text: TextSpan(
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: Colors.black,
-                        ),
-                        children: [
-                          const TextSpan(text: 'I agree with '),
-                          TextSpan(
-                            text: 'User Terms And Conditions',
-                            style: const TextStyle(color: Colors.blue),
-                          ),
-                          const TextSpan(text: ' and\nacknowledge the '),
-                          TextSpan(
-                            text: 'Privacy Notice',
-                            style: const TextStyle(color: Colors.blue),
-                          ),
-                          const TextSpan(
-                            text:
-                                ' of World App provided by Tools for Humanity',
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              // Row(
+              //   crossAxisAlignment: CrossAxisAlignment.start,
+              //   children: [
+              //     // Checkbox(
+              //     //   value: isChecked,
+              //     //   activeColor: Colors.black,
+              //     //   onChanged: (value) {
+              //     //
+              //     //   },
+              //     // ),
+              //     Expanded(
+              //       child: RichText(
+              //         text: TextSpan(
+              //           style: const TextStyle(
+              //             fontSize: 13,
+              //             color: Colors.black,
+              //           ),
+              //           children: [
+              //             const TextSpan(text: 'I agree with '),
+              //             TextSpan(
+              //               text: 'User Terms And Conditions',
+              //               style: const TextStyle(color: Colors.blue),
+              //             ),
+              //             const TextSpan(text: ' and\nacknowledge the '),
+              //             TextSpan(
+              //               text: 'Privacy Notice',
+              //               style: const TextStyle(color: Colors.blue),
+              //             ),
+              //             const TextSpan(
+              //               text:
+              //                   ' of World App provided by Tools for Humanity',
+              //             ),
+              //           ],
+              //         ),
+              //       ),
+              //     ),
+              //   ],
+              // ),
 
               const SizedBox(height: 20),
 

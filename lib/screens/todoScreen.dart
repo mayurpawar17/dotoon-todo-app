@@ -2,12 +2,21 @@ import 'package:flutter/material.dart';
 
 import '../widgets/todoTile.dart';
 
-class TodoScreen extends StatelessWidget {
+class TodoScreen extends StatefulWidget {
   const TodoScreen({super.key});
 
   @override
+  State<TodoScreen> createState() => _TodoScreenState();
+}
+
+class _TodoScreenState extends State<TodoScreen> {
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(child: Column(children: [Text('Hello world')])),
+      appBar: AppBar(
+        title: Text('todo'),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Navigator.of(context).push(
@@ -34,7 +43,13 @@ class TodoScreen extends StatelessWidget {
                       // Make menu icon tappable
                       IconButton(
                         icon: const Icon(Icons.menu, size: 28),
-                        onPressed: () {},
+                        onPressed: () {
+                          
+                           showDrawer();
+                         
+                          setState(() {});
+                          
+                        },
                       ),
                       const SizedBox(width: 4),
                       Column(
@@ -212,4 +227,8 @@ void showAddTodoBottomSheet(BuildContext context) {
       );
     },
   );
+}
+
+Widget showDrawer() {
+  return Drawer(child: Column(children: [Text('Hello world')]));
 }

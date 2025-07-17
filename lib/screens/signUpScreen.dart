@@ -13,9 +13,6 @@ class SignUpScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Back arrow
-              const Icon(Icons.arrow_back, size: 28),
-
               const SizedBox(height: 20),
 
               const Text(
@@ -31,7 +28,6 @@ class SignUpScreen extends StatelessWidget {
                 decoration: InputDecoration(
                   labelText: 'Name',
                   border: const OutlineInputBorder(),
-
                 ),
               ),
 
@@ -62,10 +58,15 @@ class SignUpScreen extends StatelessWidget {
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
-                children: const [
-                  Text(
-                    'Already have an account? →',
-                    style: TextStyle(color: Colors.grey),
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      'Already have an account? →',
+                      style: TextStyle(color: Colors.grey),
+                    ),
                   ),
                 ],
               ),

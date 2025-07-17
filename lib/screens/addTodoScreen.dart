@@ -44,6 +44,7 @@ void showAddTodoBottomSheet(BuildContext context) {
 
                   // Title Input
                   TextField(
+                    autofocus: true,
                     controller: _titleController,
                     decoration: const InputDecoration(
                       labelText: 'Task Title',
