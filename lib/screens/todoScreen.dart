@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 import '../widgets/todoTile.dart';
 
@@ -15,7 +16,11 @@ class _TodoScreenState extends State<TodoScreen> {
     return Scaffold(
       drawer: Drawer(child: Column(children: [Text('Hello world')])),
       appBar: AppBar(
-        title: Text('todo'),
+        title: GradientText(
+          'Dotoon',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+          colors: [Colors.deepPurpleAccent, Colors.blue, Colors.purpleAccent],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -34,51 +39,6 @@ class _TodoScreenState extends State<TodoScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Top UI with menu icon opening drawer
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      // Make menu icon tappable
-                      IconButton(
-                        icon: const Icon(Icons.menu, size: 28),
-                        onPressed: () {
-                          
-                           showDrawer();
-                         
-                          setState(() {});
-                          
-                        },
-                      ),
-                      const SizedBox(width: 4),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '18th Jan 2024',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                          const Text(
-                            'Monday',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const Icon(Icons.notifications_none, size: 28),
-                ],
-              ),
-
-              const SizedBox(height: 24),
-
               const Text(
                 'Todo',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
