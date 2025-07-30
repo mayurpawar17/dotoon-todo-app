@@ -1,182 +1,120 @@
-import 'package:dotoon_todo_app/screens/signUpScreen.dart';
+import 'package:dotoon_todo_app/screens/todoScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'loginScreen.dart';
+import '../constants/appColors.dart';
 
-class WelcomeScreen extends StatelessWidget {
+class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
+
+  @override
+  State<WelcomeScreen> createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends State<WelcomeScreen> {
+  Future<void> saveUsername(String name) async {
+    final pref = await SharedPreferences.getInstance();
+    await pref.setString('USERNAME', name);
+  }
+
+  final TextEditingController _usernameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 40),
+          padding: const EdgeInsets.all(15),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(
+                  'assets/dotoonLogoWhite.svg',
+                  width: 90,
+                  height: 90,
+                ),
 
-              // Logo
-              Image.asset('assets/pngs/dotoonLogo.png', width: 50, height: 50),
-              const SizedBox(height: 24),
-
-              // Title
-              const Text(
-                'Dotoon',
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-              ),
-
-              const SizedBox(height: 12),
-
-              // Subtitle
-              const Text(
-                'The wallet designed to make digital\nID and global finance simple for all.',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, color: Colors.black54),
-              ),
-
-              const Spacer(),
-
-              // Terms & Checkbox
-              // Row(
-              //   crossAxisAlignment: CrossAxisAlignment.start,
-              //   children: [
-              //     // Checkbox(
-              //     //   value: isChecked,
-              //     //   activeColor: Colors.black,
-              //     //   onChanged: (value) {
-              //     //
-              //     //   },
-              //     // ),
-              //     Expanded(
-              //       child: RichText(
-              //         text: TextSpan(
-              //           style: const TextStyle(
-              //             fontSize: 13,
-              //             color: Colors.black,
-              //           ),
-              //           children: [
-              //             const TextSpan(text: 'I agree with '),
-              //             TextSpan(
-              //               text: 'User Terms And Conditions',
-              //               style: const TextStyle(color: Colors.blue),
-              //             ),
-              //             const TextSpan(text: ' and\nacknowledge the '),
-              //             TextSpan(
-              //               text: 'Privacy Notice',
-              //               style: const TextStyle(color: Colors.blue),
-              //             ),
-              //             const TextSpan(
-              //               text:
-              //                   ' of World App provided by Tools for Humanity',
-              //             ),
-              //           ],
-              //         ),
-              //       ),
-              //     ),
-              //   ],
-              // ),
-              const SizedBox(height: 20),
-
-              // New Account Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SignUpScreen()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'New account',
-                            style: TextStyle(fontSize: 16, color: Colors.white),
-                          ),
-                          Text(
-                            'Create new World coin account',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.white70,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Icon(Icons.arrow_right, size: 30, color: Colors.white54),
-                    ],
+                // LogoWidget(),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                Text(
+                  'Welcome to Dotoon',
+                  style: TextStyle(
+                    color: whiteColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 35,
                   ),
                 ),
-              ),
+                Text(
+                  'Your Day, Organized the Dotoon Way',
+                  style: TextStyle(
+                    color: whiteColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.03),
 
-              const SizedBox(height: 12),
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  decoration: BoxDecoration(
+                    color: todoItemCardColor,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: TextField(
+                    controller: _usernameController,
+                    style: TextStyle(color: whiteColor),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Enter your name',
+                    ),
+                  ),
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
 
-              // Existing Account Button
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton(
-                  onPressed: () {
+                InkWell(
+                  onTap: () async {
+                    final username = _usernameController.text.trim();
+
+                    if (username.isEmpty) return;
+
+                    await saveUsername(username); // await the storage
+                    _usernameController.clear();
+
                     Navigator.of(context).push(
                       PageRouteBuilder(
                         transitionDuration: Duration(milliseconds: 150),
                         transitionsBuilder: (context, ani, secondAni, child) {
                           return FadeTransition(opacity: ani, child: child);
                         },
-                        pageBuilder: (context, ani, secondAni) => LoginScreen(),
+                        pageBuilder: (context, ani, secondAni) => TodoScreen(),
                       ),
                     );
                   },
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
+                  child: Container(
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: whiteColor,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    side: const BorderSide(color: Colors.black12),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
-                            'Existing account',
-                            style: TextStyle(fontSize: 16, color: Colors.black),
-                          ),
-                          Text(
-                            'Restore your account from a backup',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black54,
-                            ),
-                          ),
+                          Text('Continue', style: TextStyle(fontSize: 18)),
+                          Icon(Icons.arrow_right),
                         ],
                       ),
-                      Icon(Icons.arrow_right, size: 30, color: Colors.black54),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-
-              const SizedBox(height: 24),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
-    ;
   }
 }
