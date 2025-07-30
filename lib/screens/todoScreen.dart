@@ -1,3 +1,4 @@
+import 'package:dotoon_todo_app/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
@@ -21,6 +22,22 @@ class _TodoScreenState extends State<TodoScreen> {
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
           colors: [Colors.deepPurpleAccent, Colors.blue, Colors.purpleAccent],
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                PageRouteBuilder(
+                  transitionDuration: Duration(milliseconds: 150),
+                  transitionsBuilder: (context, ani, secondAni, child) {
+                    return FadeTransition(opacity: ani, child: child);
+                  },
+                  pageBuilder: (context, ani, secondAni) => SettingsScreen(),
+                ),
+              );
+            },
+            icon: Icon(Icons.settings),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

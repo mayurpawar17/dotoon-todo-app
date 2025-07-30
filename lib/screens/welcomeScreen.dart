@@ -78,7 +78,6 @@ class WelcomeScreen extends StatelessWidget {
               //     ),
               //   ],
               // ),
-
               const SizedBox(height: 20),
 
               // New Account Button
@@ -130,9 +129,14 @@ class WelcomeScreen extends StatelessWidget {
                 width: double.infinity,
                 child: OutlinedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginScreen()),
+                    Navigator.of(context).push(
+                      PageRouteBuilder(
+                        transitionDuration: Duration(milliseconds: 150),
+                        transitionsBuilder: (context, ani, secondAni, child) {
+                          return FadeTransition(opacity: ani, child: child);
+                        },
+                        pageBuilder: (context, ani, secondAni) => LoginScreen(),
+                      ),
                     );
                   },
                   style: OutlinedButton.styleFrom(
