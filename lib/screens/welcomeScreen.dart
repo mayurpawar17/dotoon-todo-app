@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/appColors.dart';
+import 'onboarding_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -13,12 +14,15 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
+  bool isOnboardingDone = false;
   final TextEditingController _usernameController = TextEditingController();
 
   // Save username to SharedPreferences asynchronously
-  Future<void> _saveUsername(String name) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('USERNAME', name);
+  Future<void> saveUsername(String name, bool isOnboardingDone) async {
+    final pref = await SharedPreferences.getInstance();
+    await pref.setString('USERNAME', name);
+    //save user onboarding
+    await pref.setBool('ONBOARDING', isOnboardingDone);
   }
 
   // Dispose controller to avoid memory leaks
@@ -36,7 +40,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         transitionsBuilder: (context, animation, _, child) {
           return FadeTransition(opacity: animation, child: child);
         },
-        pageBuilder: (context, _, __) => const TodoScreen(),
+        pageBuilder: (context, _, __) => const OnboardingScreen(),
       ),
     );
   }
@@ -153,8 +157,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       ).showSnackBar(const SnackBar(content: Text('Please enter your name')));
       return;
     }
+    isOnboardingDone = true;
 
-    await _saveUsername(username);
+    await saveUsername(username, isOnboardingDone);
 
     _usernameController.clear();
 

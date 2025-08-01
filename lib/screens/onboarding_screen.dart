@@ -74,7 +74,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   "Download the Stockpile app and master the market with our mini-lesson.",
               image: Container(
                 margin: EdgeInsets.symmetric(vertical: 50),
-                child: SvgPicture.asset('assets/slide_2.svg'),
+                child: SvgPicture.asset('assets/slide_1.svg'),
               ),
               decoration: pageDecoration,
             ),
@@ -84,7 +84,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   "Kids and teens can track their stocks 24/7 and place trades that you approve.",
               image: Container(
                 margin: EdgeInsets.symmetric(vertical: 50),
-                child: SvgPicture.asset('assets/slide_3.svg'),
+                child: SvgPicture.asset('assets/slide_1.svg'),
               ),
               decoration: pageDecoration,
             ),

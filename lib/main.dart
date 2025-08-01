@@ -2,15 +2,22 @@ import 'package:dotoon_todo_app/screens/todoScreen.dart';
 import 'package:dotoon_todo_app/screens/welcomeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'constants/appColors.dart';
 
-void main() {
-  runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool isOnboardingDone = prefs.getBool('ONBOARDING') ?? false;
+  runApp(MyApp(isOnboardingDone: isOnboardingDone));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isOnboardingDone;
+
+  const MyApp({super.key, required this.isOnboardingDone});
 
   @override
   Widget build(BuildContext context) {
