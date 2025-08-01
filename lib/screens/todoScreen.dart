@@ -72,7 +72,10 @@ class _TodoScreenState extends State<TodoScreen> {
         automaticallyImplyLeading: false,
         title: Text(
           username == null ? 'Hello...' : 'Hello, $username',
-          style: const TextStyle(color: whiteColor, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            color: whiteColor,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         actions: [
           IconButton(
@@ -81,8 +84,9 @@ class _TodoScreenState extends State<TodoScreen> {
               Navigator.of(context).push(
                 PageRouteBuilder(
                   transitionDuration: const Duration(milliseconds: 300),
-                  transitionsBuilder: (context, animation, _, child) =>
-                      FadeTransition(opacity: animation, child: child),
+                  transitionsBuilder:
+                      (context, animation, _, child) =>
+                          FadeTransition(opacity: animation, child: child),
                   pageBuilder: (context, _, __) => const SettingsScreen(),
                 ),
               );
@@ -109,61 +113,73 @@ class _TodoScreenState extends State<TodoScreen> {
               ),
               const SizedBox(height: 10),
               Expanded(
-                child: isTaskListEmpty
-                    ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/no_task.svg',
-                        height: 200,
-                      ),
-                      const SizedBox(height: 30),
-                      Text(
-                        'Add Task',
-                        style: TextStyle(
-                          color: whiteColor,
-                          fontSize: 25,
+                child:
+                    isTaskListEmpty
+                        ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(
+                                'assets/no_task.svg',
+                                height: 200,
+                              ),
+                              const SizedBox(height: 30),
+                              Text(
+                                'Add Task',
+                                style: TextStyle(
+                                  color: whiteColor,
+                                  fontSize: 25,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                        : ListView.builder(
+                          itemCount: todos.length,
+                          itemBuilder: (context, index) {
+                            final item = todos[index];
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 5),
+                              child: Dismissible(
+                                key: Key(item.id),
+                                background: Container(
+                                  alignment: Alignment.centerLeft,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                  ),
+                                  color: Colors.green,
+                                  child: const Icon(
+                                    Icons.archive,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                secondaryBackground: Container(
+                                  alignment: Alignment.centerRight,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                  ),
+                                  color: Colors.red,
+                                  child: const Icon(
+                                    Icons.delete,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                direction: DismissDirection.horizontal,
+                                onDismissed: (direction) {
+                                  if (direction ==
+                                      DismissDirection.startToEnd) {
+                                    // Archive action - currently just removes and shows snackbar
+                                    _removeTodoAt(index, message: 'Archived');
+                                  } else {
+                                    // Delete action
+                                    _removeTodoAt(index, message: 'Deleted');
+                                  }
+                                },
+                                child: _buildTodoItemCard(item),
+                              ),
+                            );
+                          },
                         ),
-                      ),
-                    ],
-                  ),
-                )
-                    : ListView.builder(
-                  itemCount: todos.length,
-                  itemBuilder: (context, index) {
-                    final item = todos[index];
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5),
-                      child: Dismissible(
-                        key: Key(item.id),
-                        background: Container(
-                          alignment: Alignment.centerLeft,
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          color: Colors.green,
-                          child: const Icon(Icons.archive, color: Colors.white),
-                        ),
-                        secondaryBackground: Container(
-                          alignment: Alignment.centerRight,
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          color: Colors.red,
-                          child: const Icon(Icons.delete, color: Colors.white),
-                        ),
-                        direction: DismissDirection.horizontal,
-                        onDismissed: (direction) {
-                          if (direction == DismissDirection.startToEnd) {
-                            // Archive action - currently just removes and shows snackbar
-                            _removeTodoAt(index, message: 'Archived');
-                          } else {
-                            // Delete action
-                            _removeTodoAt(index, message: 'Deleted');
-                          }
-                        },
-                        child: _buildTodoItemCard(item),
-                      ),
-                    );
-                  },
-                ),
               ),
             ],
           ),
@@ -267,7 +283,9 @@ void showAddTaskModal(BuildContext context, Function(Todo) onTaskCreated) {
                         ),
                         child: Center(
                           child: TextField(
-                            decoration: const InputDecoration(border: InputBorder.none),
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                            ),
                             style: const TextStyle(color: whiteColor),
                             controller: titleController,
                             textInputAction: TextInputAction.next,
@@ -280,7 +298,10 @@ void showAddTaskModal(BuildContext context, Function(Todo) onTaskCreated) {
                         style: TextStyle(fontSize: 16, color: fontGrey),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 15,
+                          vertical: 8,
+                        ),
                         decoration: BoxDecoration(
                           color: bgColor,
                           border: Border.all(color: fontGrey),
@@ -291,7 +312,13 @@ void showAddTaskModal(BuildContext context, Function(Todo) onTaskCreated) {
                           style: const TextStyle(color: whiteColor),
                           controller: descriptionController,
                           textInputAction: TextInputAction.done,
-                          onSubmitted: (_) => _attemptCreateTask(context, titleController, descriptionController, onTaskCreated),
+                          onSubmitted:
+                              (_) => _attemptCreateTask(
+                                context,
+                                titleController,
+                                descriptionController,
+                                onTaskCreated,
+                              ),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -301,7 +328,13 @@ void showAddTaskModal(BuildContext context, Function(Todo) onTaskCreated) {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: whiteColor,
                           ),
-                          onPressed: () => _attemptCreateTask(context, titleController, descriptionController, onTaskCreated),
+                          onPressed:
+                              () => _attemptCreateTask(
+                                context,
+                                titleController,
+                                descriptionController,
+                                onTaskCreated,
+                              ),
                           child: const Text(
                             'Create Task',
                             style: TextStyle(color: bgColor),
@@ -322,20 +355,18 @@ void showAddTaskModal(BuildContext context, Function(Todo) onTaskCreated) {
 
 // Helper method to validate inputs and create the task
 void _attemptCreateTask(
-    BuildContext context,
-    TextEditingController titleController,
-    TextEditingController descriptionController,
-    Function(Todo) onTaskCreated,
-    ) {
+  BuildContext context,
+  TextEditingController titleController,
+  TextEditingController descriptionController,
+  Function(Todo) onTaskCreated,
+) {
   final title = titleController.text.trim();
   final description = descriptionController.text.trim();
 
   if (title.isEmpty || description.isEmpty) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Please enter both fields'),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Please enter both fields')));
     return;
   }
 
