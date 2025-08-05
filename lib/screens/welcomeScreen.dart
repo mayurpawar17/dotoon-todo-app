@@ -1,6 +1,9 @@
+import 'package:dotoon_todo_app/bloc/welcome/welcome_bloc.dart';
+import 'package:dotoon_todo_app/bloc/welcome/welcome_events.dart';
+import 'package:dotoon_todo_app/bloc/welcome/welcome_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/appColors.dart';
 import 'onboarding_screen.dart';
@@ -13,16 +16,7 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
-  bool isOnboardingDone = false;
   final TextEditingController _usernameController = TextEditingController();
-
-  // Save username to SharedPreferences asynchronously
-  Future<void> saveUsername(String name, bool isOnboardingDone) async {
-    final pref = await SharedPreferences.getInstance();
-    await pref.setString('USERNAME', name);
-    //save user onboarding
-    await pref.setBool('ONBOARDING', isOnboardingDone);
-  }
 
   // Dispose controller to avoid memory leaks
   @override
@@ -52,94 +46,116 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Center(
-            child: SingleChildScrollView(
-              // Wrap Column with SingleChildScrollView for smaller screens
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    'assets/dotoonLogoWhite.svg',
-                    width: 90,
-                    height: 90,
-                  ),
-                  SizedBox(height: mediaHeight * 0.05),
-
-                  Text(
-                    'Welcome to Dotoon',
-                    style: const TextStyle(
-                      color: whiteColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 35,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  Text(
-                    'Your Day, Organized the Dotoon Way',
-                    style: const TextStyle(
-                      color: whiteColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: mediaHeight * 0.03),
-
-                  // Username input field container
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10,
-                      horizontal: 15,
-                    ),
-                    decoration: BoxDecoration(
-                      color: todoItemCardColor,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: TextField(
-                      controller: _usernameController,
-                      style: const TextStyle(color: whiteColor),
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Enter your name',
-                        hintStyle: TextStyle(color: Colors.white70),
+        child: BlocConsumer<WelcomeBloc, WelcomeState>(
+          builder: (context, state) {
+            return Padding(
+              padding: const EdgeInsets.all(15),
+              child: Center(
+                child: SingleChildScrollView(
+                  // Wrap Column with SingleChildScrollView for smaller screens
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/dotoonLogoWhite.svg',
+                        width: 90,
+                        height: 90,
                       ),
-                      textInputAction: TextInputAction.done,
-                      onSubmitted: (_) => _onContinuePressed(),
-                    ),
-                  ),
-                  SizedBox(height: mediaHeight * 0.05),
+                      SizedBox(height: mediaHeight * 0.05),
 
-                  // Continue button
-                  SizedBox(
-                    width: double.infinity,
-                    height: 60,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: whiteColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                      Text(
+                        'Welcome to Dotoon',
+                        style: const TextStyle(
+                          color: whiteColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 35,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        'Your Day, Organized the Dotoon Way',
+                        style: const TextStyle(
+                          color: whiteColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: mediaHeight * 0.03),
+
+                      // Username input field container
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 10,
+                          horizontal: 15,
+                        ),
+                        decoration: BoxDecoration(
+                          color: todoItemCardColor,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: TextField(
+                          controller: _usernameController,
+                          style: const TextStyle(color: whiteColor),
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Enter your name',
+                            hintStyle: TextStyle(color: Colors.white70),
+                          ),
+                          textInputAction: TextInputAction.done,
+                          onSubmitted: (_) => _onContinuePressed(),
                         ),
                       ),
-                      onPressed: _onContinuePressed,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Text(
-                            'Continue',
-                            style: TextStyle(fontSize: 18, color: Colors.black),
+                      SizedBox(height: mediaHeight * 0.05),
+
+                      // Continue button
+                      SizedBox(
+                        width: double.infinity,
+                        height: 60,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: whiteColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
-                          SizedBox(width: 5),
-                          Icon(Icons.arrow_right, color: Colors.black),
-                        ],
+                          onPressed: _onContinuePressed,
+                          child:
+                              state is WelcomeLoadingState
+                                  ? const CircularProgressIndicator()
+                                  : Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: const [
+                                      Text(
+                                        'Continue',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      SizedBox(width: 5),
+                                      Icon(
+                                        Icons.arrow_right,
+                                        color: Colors.black,
+                                      ),
+                                    ],
+                                  ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
+          listener: (context, state) {
+            if (state is WelcomeSuccessState) {
+              _navigateToTodoScreen();
+            } else if (state is WelcomeFailureState) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(state.error)));
+            }
+          },
         ),
       ),
     );
@@ -149,19 +165,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   void _onContinuePressed() async {
     final username = _usernameController.text.trim();
 
-    if (username.isEmpty) {
-      // Optionally inform user about invalid input
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Please enter your name')));
-      return;
-    }
-    isOnboardingDone = true;
-
-    await saveUsername(username, isOnboardingDone);
+    context.read<WelcomeBloc>().add(OnContinueEvent(username: username));
 
     _usernameController.clear();
 
-    _navigateToTodoScreen();
+    // _navigateToTodoScreen();
   }
 }
