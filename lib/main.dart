@@ -1,43 +1,22 @@
-import 'package:dotoon_todo_app/bloc/welcome/welcome_bloc.dart';
-import 'package:dotoon_todo_app/screens/todoScreen.dart';
-import 'package:dotoon_todo_app/screens/welcomeScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import 'constants/appColors.dart';
+import 'core/theme/app_theming.dart';
+import 'features/todo/presentation/todo_screen.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  bool isOnboardingDone = prefs.getBool('ONBOARDING') ?? false;
-  runApp(MyApp(isOnboardingDone: isOnboardingDone));
+void main() {
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final bool isOnboardingDone;
-
-  const MyApp({super.key, required this.isOnboardingDone});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [BlocProvider(create: (_) => WelcomeBloc())],
-      child: MaterialApp(
-        theme: ThemeData(
-          textTheme: GoogleFonts.robotoTextTheme(),
-          scaffoldBackgroundColor: bgColor,
-          appBarTheme: AppBarTheme(color: bgColor),
-        ),
-        debugShowCheckedModeBanner: false,
-        initialRoute: '/welcome',
-        routes: {
-          '/welcome': (context) => WelcomeScreen(),
-          '/todoScreen': (context) => TodoScreen(),
-        },
-      ),
+    return MaterialApp(
+      theme: AppTheming.lightTheme,
+      // darkTheme: AppTheming.darkTheme,
+      debugShowCheckedModeBanner: false,
+      home: TodoScreen(),
     );
   }
 }
