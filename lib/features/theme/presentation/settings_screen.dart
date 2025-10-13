@@ -1,4 +1,9 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../provider/theme_provider.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -7,6 +12,8 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height * 0.06;
     final width = MediaQuery.of(context).size.width * 0.42;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
       // backgroundColor: AppColors.primaryColor2,
@@ -26,6 +33,17 @@ class SettingsScreen extends StatelessWidget {
               ),
               SizedBox(height: 10),
 
+              ListTile(
+                leading: Icon(isDark ? EvaIcons.moon : EvaIcons.sun),
+                title: Text('${isDark ? 'Dark' : 'Light'} Theme'),
+                trailing: SizedBox(
+                  child: CupertinoSwitch(
+                    value: isDark,
+                    onChanged: (b) => themeProvider.toggleTheme(isDark),
+                  ),
+                ),
+              ),
+
               SizedBox(height: 50),
 
               Text(
@@ -35,6 +53,7 @@ class SettingsScreen extends StatelessWidget {
 
               SizedBox(height: 10),
 
+              // CustomExpansionTile(),
               SizedBox(height: 10),
             ],
           ),

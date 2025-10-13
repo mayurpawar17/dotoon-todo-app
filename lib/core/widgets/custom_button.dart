@@ -14,6 +14,7 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height * 0.07;
     return Material(
       borderRadius: BorderRadius.circular(15),
       color: Colors.black,
@@ -21,7 +22,7 @@ class CustomButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
         onTap: onTap,
         child: Container(
-          height: 50,
+          height: height,
           width: double.infinity,
           decoration: BoxDecoration(
             // color: AppColors.accentBlueDarkColor,

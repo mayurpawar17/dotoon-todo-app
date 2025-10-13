@@ -1,157 +1,165 @@
-import 'package:date_picker_timeline/date_picker_widget.dart';
+import 'package:dotoon_todo_app/features/todo/presentation/widgets/custom_bottom_sheet.dart';
 import 'package:dotoon_todo_app/features/todo/presentation/widgets/custom_list_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
-import '../../theme/presentation/settings_screen.dart';
+import '../../../core/utils/helper_method.dart';
+import '../../onboarding/provider/onboarding_prodvider.dart';
+import '../domain/todo_Model.dart';
+import '../provider/task_provider.dart';
 
-class TodoScreen extends StatelessWidget {
-  TodoScreen({super.key});
+class TodoScreen extends StatefulWidget {
+  const TodoScreen({super.key});
 
-  final DateTime _selectedDate = DateTime.now();
+  @override
+  State<TodoScreen> createState() => _TodoScreenState();
+}
 
-  List<String> text = List.generate(20, (i) => 'Task $i');
+class _TodoScreenState extends State<TodoScreen> with TickerProviderStateMixin {
+  late final AnimationController _animationController;
+  final DateTime _currentDate = DateTime.now(); // track currently selected date
 
-  final List<String> _tasks = [];
+  @override
+  void initState() {
+    super.initState();
+    _animationController = BottomSheet.createAnimationController(this);
+    _animationController.duration = const Duration(milliseconds: 400);
+    _animationController.reverseDuration = const Duration(milliseconds: 300);
+    _animationController.drive(CurveTween(curve: Curves.easeInOut));
+  }
 
-  final TextEditingController _controller = TextEditingController();
+  Todo? todo;
 
-  // void _openAddTaskSheet() {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     isScrollControlled: true, // 👈 expands with keyboard
-  //     shape: const RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-  //     ),
-  //     builder: (context) {
-  //       return SafeArea(
-  //         child: Padding(
-  //           padding: EdgeInsets.only(
-  //             bottom: MediaQuery.of(
-  //               context,
-  //             ).viewInsets.bottom, // avoid keyboard overlap
-  //             left: 16,
-  //             right: 16,
-  //             top: 20,
-  //           ),
-  //           child: Column(
-  //             mainAxisSize: MainAxisSize.min,
-  //             crossAxisAlignment: CrossAxisAlignment.start,
-  //             children: [
-  //               const Text(
-  //                 "Add Task",
-  //                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-  //               ),
-  //               const SizedBox(height: 12),
-  //               TextField(
-  //                 controller: _controller,
-  //                 autofocus: true,
-  //                 decoration: InputDecoration(
-  //                   hintText: "Enter task",
-  //                   border: InputBorder.none,
-  //                 ),
-  //               ),
-  //               const SizedBox(height: 12),
-  //
-  //               CustomButton(
-  //                 text: 'Save Task',
-  //                 onTap: () {},
-  //                 widget: Icon(Icons.close, color: Colors.white),
-  //               ),
-  //               const SizedBox(height: 10),
-  //             ],
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height * 0.5;
+    final taskProvider = Provider.of<TaskProvider>(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Hello Example',
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
+            Consumer<OnBoardingProvider>(
+              builder: (context, onBoardingProvider, child) {
+                return Text(
+                  'Hello ${taskProvider.name}',
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
+                );
+              },
             ),
 
             Text(
-              DateFormat('MMMM d, yyyy').format(_selectedDate),
+              DateFormat('MMMM d, yyyy').format(_currentDate),
               style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
           ],
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SettingsScreen()),
-              );
-            },
-            icon: Icon(Icons.settings),
-          ),
-        ],
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(20),
+          padding: EdgeInsets.all(15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Divider(thickness: 0.2),
-              // Date Picker Timeline
-              DatePicker(
-                DateTime.now(),
-                width: 60,
-                height: 100,
-                initialSelectedDate: DateTime.now(),
-                selectionColor: Colors.black,
-                selectedTextColor: Colors.white,
-                onDateChange: (date) {
-                  // update selected date
-                },
+              const Divider(thickness: 0.2),
+
+              // SizedBox(height: 10),
+              Text(
+                'To Do',
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 18,
+                  color: HelperMethods.themeColor(context),
+                ),
               ),
               SizedBox(height: 10),
 
-              Text(
-                'To Do',
-                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
-              ),
-              SizedBox(height: 10),
               Expanded(
-                child: ListView.builder(
-                  itemCount: text.length,
-                  itemBuilder: (context, index) {
-                    return CustomListTile(index: index);
-                  },
-                ),
+                child:
+                    taskProvider.tasks.isEmpty
+                        ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset('assets/no_task1.jpg', height: 300),
+
+                              Text(
+                                'Nothing here yet!',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  color: HelperMethods.themeColor(context),
+                                ),
+                              ),
+                              Text(
+                                'Add your first task and get started',
+                                style: TextStyle(
+                                  color: HelperMethods.themeColor(context),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                        : ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: taskProvider.tasks.length,
+                          itemBuilder: (context, index) {
+                            final todo = taskProvider.tasks[index];
+                            return Dismissible(
+                              key: ValueKey(todo.id),
+                              background: Container(
+                                alignment: Alignment.centerRight,
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                color: Colors.red,
+                                child: Icon(Icons.delete, color: Colors.white),
+                              ),
+
+                              direction: DismissDirection.endToStart,
+                              onDismissed: (direction) {
+                                taskProvider.removeTodo(todo.id);
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    backgroundColor:
+                                        isDark ? Colors.white : Colors.black,
+                                    content: Text('Task deleted'),
+                                    action: SnackBarAction(
+                                      label: 'Undo',
+                                      textColor:
+                                          isDark ? Colors.black : Colors.white,
+                                      onPressed: () {
+                                        taskProvider.saveTask(todo);
+                                      },
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: CustomListTile(
+                                onTap: () {
+                                  _openAddTaskSheet(context, todo);
+                                  HapticFeedback.selectionClick();
+                                },
+                                todo: todo,
+                                isCompleted: todo.isCompleted,
+                                onChanged: () {
+                                  taskProvider.markAsComplete(todo);
+                                  HapticFeedback.lightImpact();
+                                },
+                              ),
+                            );
+                          },
+                        ),
               ),
-              // SizedBox(height: 10),
-              // Text(
-              //   'Done',
-              //   style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
-              // ),
-              // SizedBox(height: 10),
-              // Expanded(
-              //   child: ListView.builder(
-              //     itemCount: text.length,
-              //     itemBuilder: (context, index) {
-              //       // return ListTile(title: Text(text[index]));
-              //       return ListTile(
-              //         title: Text(text[index]),
-              //         subtitle: const Text("This is a to-do item"),
-              //         trailing: const Icon(Icons.check_circle_outline),
-              //       );
-              //     },
-              //   ),
-              // ),
             ],
           ),
         ),
@@ -159,12 +167,29 @@ class TodoScreen extends StatelessWidget {
 
       floatingActionButton: FloatingActionButton(
         elevation: 0,
-        // onPressed: _openAddTaskSheet,
-        onPressed: () {},
-        child: Icon(Icons.add, color: Colors.white),
+        onPressed: () {
+          _openAddTaskSheet(context, todo);
+        },
+        child: Icon(Icons.add, color: isDark ? Colors.black : Colors.white),
       ),
       floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
+  }
+
+  void _openAddTaskSheet(context, Todo? todo) {
+    showModalBottomSheet(
+      transitionAnimationController: _animationController,
+      context: context,
+      // expands with keyboard
+      isScrollControlled: true,
+
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) {
+        return CustomBottomSheet(todo: todo);
+      },
     );
   }
 }

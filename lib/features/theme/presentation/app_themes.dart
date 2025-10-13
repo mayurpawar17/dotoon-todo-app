@@ -2,26 +2,24 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class AppTheming {
+import '../../../core/theme/app_colors.dart';
+
+class AppThemes {
   // Light Theme
   static final ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
-    primarySwatch: Colors.orange,
+    primarySwatch: AppColors.createMaterialColor(AppColors.accentBlueDarkColor),
     scaffoldBackgroundColor: Colors.white,
     appBarTheme: const AppBarTheme(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.primaryColor2,
       foregroundColor: Colors.black,
       elevation: 0,
-      centerTitle: false,
+      // centerTitle: true,
     ),
-    fontFamily: GoogleFonts.albertSans().fontFamily,
+    fontFamily: GoogleFonts.openSans().fontFamily,
     textTheme: const TextTheme(
       bodyLarge: TextStyle(fontSize: 16, color: Colors.black87),
       bodyMedium: TextStyle(fontSize: 14, color: Colors.black54),
-    ),
-
-    floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: Colors.black,
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
@@ -32,14 +30,38 @@ class AppTheming {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       ),
     ),
-
-    pageTransitionsTheme: PageTransitionsTheme(
+    pageTransitionsTheme: const PageTransitionsTheme(
       builders: {
         TargetPlatform.android: SharedAxisPageTransitionsBuilder(
           transitionType: SharedAxisTransitionType.horizontal,
           fillColor: Colors.white,
         ),
       },
+    ),
+
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor: Colors.white,
+      selectedItemColor: Colors.orange,
+      unselectedItemColor: Colors.grey,
+      showUnselectedLabels: true,
+      type: BottomNavigationBarType.fixed,
+      elevation: 8,
+    ),
+
+    bottomSheetTheme: const BottomSheetThemeData(
+      backgroundColor: Colors.white,
+      modalBackgroundColor: Colors.white,
+      surfaceTintColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      elevation: 8,
+      modalElevation: 10,
+      showDragHandle: true,
+    ),
+
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: Colors.black,
     ),
   );
 
@@ -52,9 +74,9 @@ class AppTheming {
       backgroundColor: Colors.black,
       foregroundColor: Colors.white,
       elevation: 0,
-      centerTitle: true,
+      // centerTitle: true,
     ),
-    fontFamily: GoogleFonts.albertSans().fontFamily,
+    fontFamily: GoogleFonts.openSans().fontFamily,
     textTheme: const TextTheme(
       bodyLarge: TextStyle(fontSize: 16, color: Colors.white),
       bodyMedium: TextStyle(fontSize: 14, color: Colors.white70),
@@ -69,12 +91,37 @@ class AppTheming {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       ),
     ),
-    pageTransitionsTheme: PageTransitionsTheme(
+    pageTransitionsTheme: const PageTransitionsTheme(
       builders: {
         TargetPlatform.android: SharedAxisPageTransitionsBuilder(
           transitionType: SharedAxisTransitionType.horizontal,
+          fillColor: Colors.white,
         ),
       },
+    ),
+
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor: Colors.black,
+      selectedItemColor: Colors.orange,
+      unselectedItemColor: Colors.grey,
+      showUnselectedLabels: true,
+      type: BottomNavigationBarType.fixed,
+      // elevation: 8,
+    ),
+
+    bottomSheetTheme: const BottomSheetThemeData(
+      backgroundColor: Color(0xFF1E1E1E),
+      modalBackgroundColor: Color(0xFF1E1E1E),
+      surfaceTintColor: Colors.transparent,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      elevation: 8,
+      modalElevation: 10,
+      showDragHandle: true,
+    ),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: Colors.white,
     ),
   );
 }

@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/widgets/custom_button.dart';
 import '../../../core/widgets/dotoon_logo.dart';
-import '../../todo/presentation/todo_screen.dart';
+import '../../todo/presentation/home_screen.dart';
+import '../data/onboarding_services.dart';
+import '../provider/onboarding_prodvider.dart';
 
 class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({super.key});
+  WelcomeScreen({super.key});
+
+  final TextEditingController _nameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +18,7 @@ class WelcomeScreen extends StatelessWidget {
       // backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(20),
+          padding: EdgeInsets.all(15),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -46,6 +51,7 @@ class WelcomeScreen extends StatelessWidget {
                       border: Border.all(color: Colors.grey.shade300),
                     ),
                     child: TextField(
+                      controller: _nameController,
                       autofocus: true,
                       decoration: InputDecoration(
                         hintText: 'Enter your name',
@@ -56,19 +62,32 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 20),
-                  CustomButton(
-                    text: 'Continue',
-                    onTap: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => TodoScreen()),
+                  Consumer<OnBoardingProvider>(
+                    builder: (context, onBoardingProvider, child) {
+                      return CustomButton(
+                        text: 'Continue',
+                        onTap: () async {
+                          if (_nameController.text.isNotEmpty) {
+                            final name = _nameController.text.trim();
+                            onBoardingProvider.setName(name);
+                            await OnBoardingServices.setOnboarded();
+
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => HomeScreen(),
+                              ),
+                            );
+                            _nameController.clear();
+                          }
+                        },
+                        widget: Icon(
+                          Icons.arrow_forward,
+                          color: Colors.white,
+                          size: 20,
+                        ),
                       );
                     },
-                    widget: Icon(
-                      Icons.arrow_forward,
-                      color: Colors.white,
-                      size: 20,
-                    ),
                   ),
                 ],
               ),
