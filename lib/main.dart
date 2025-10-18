@@ -3,17 +3,17 @@ import 'package:provider/provider.dart';
 
 import 'features/onboarding/data/onboarding_services.dart';
 import 'features/onboarding/presentation/welcome_screen.dart';
-import 'features/onboarding/provider/onboarding_prodvider.dart';
+import 'features/onboarding/provider/onboarding_provider.dart';
 import 'features/theme/presentation/app_themes.dart';
 import 'features/theme/provider/theme_provider.dart';
 import 'features/todo/presentation/home_screen.dart';
+import 'features/todo/provider/bottom_navigation_provider.dart';
+import 'features/todo/provider/chip_filter_provider.dart';
+import 'features/todo/provider/priority_provider.dart';
 import 'features/todo/provider/task_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  WidgetsFlutterBinding.ensureInitialized();
-
   bool onboarded = await OnBoardingServices.isOnboarded();
 
   runApp(
@@ -21,7 +21,16 @@ Future<void> main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => TaskProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider(create: (_) => OnBoardingProvider()),
+        ChangeNotifierProvider(
+          create: (_) {
+            final provider = OnBoardingProvider();
+            provider.loadName(); // load stored name at startup
+            return provider;
+          },
+        ),
+        ChangeNotifierProvider(create: (_) => ChipFilterProvider()),
+        ChangeNotifierProvider(create: (_) => PriorityProvider()),
+        ChangeNotifierProvider(create: (_) => BottomNavigationProvider()),
       ],
 
       child: MyApp(onboarded: onboarded),

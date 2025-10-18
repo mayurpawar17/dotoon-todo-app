@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
@@ -19,6 +20,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final taskProvider = Provider.of<TaskProvider>(context);
+    final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       body: SafeArea(
@@ -84,20 +86,34 @@ class _CalendarScreenState extends State<CalendarScreen> {
               Expanded(
                 child:
                     taskProvider.tasksForSelectedDate.isEmpty
-                        ? const Center(child: Text('No tasks for this date'))
+                        ? Center(
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: screenHeight * 0.3,
+                                child: Lottie.asset('assets/noTaskLottie.json'),
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                'No tasks for this date',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  color: HelperMethods.themeColor(context),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
                         : ListView.builder(
-                          itemCount: taskProvider.tasks.length,
+                          itemCount: taskProvider.tasksForSelectedDate.length,
                           itemBuilder: (context, index) {
                             final todo =
                                 taskProvider.tasksForSelectedDate[index];
                             return CustomListTile(
                               todo: todo,
                               isCompleted: todo.isCompleted,
-                              onChanged: (val) {
-                                // setState(() {
-                                //   todo.isCompleted = val ?? false;
-                                // });
-                              },
+                              onChanged: (val) {},
                             );
                           },
                         ),
@@ -108,13 +124,4 @@ class _CalendarScreenState extends State<CalendarScreen> {
       ),
     );
   }
-
-  // List<Todo> get tasksForSelectedDate {
-  //   return _tasks.where((task) {
-  //     if (task.date == null) return false;
-  //     return task.date!.year == _selectedDate.year &&
-  //         task.date!.month == _selectedDate.month &&
-  //         task.date!.day == _selectedDate.day;
-  //   }).toList();
-  // }
 }

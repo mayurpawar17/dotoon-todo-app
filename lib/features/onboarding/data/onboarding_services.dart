@@ -6,8 +6,7 @@ class OnBoardingServices {
 
   Future<String?> loadName() async {
     final prefs = await SharedPreferences.getInstance();
-    String name = prefs.get(_username).toString();
-    return name;
+    return prefs.getString(_username);
   }
 
   Future<void> saveName(String name) async {

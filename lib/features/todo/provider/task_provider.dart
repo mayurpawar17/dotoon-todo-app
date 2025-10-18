@@ -1,18 +1,23 @@
-import 'package:flutter/cupertino.dart';
+import 'package:dotoon_todo_app/features/todo/provider/priority_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
+import '../../../core/utils/helper_method.dart';
 import '../../onboarding/data/onboarding_services.dart';
 import '../data/database_helper.dart';
 import '../domain/todo_Model.dart';
 
-enum TodoFilter { all, pending, completed }
-
 class TaskProvider extends ChangeNotifier {
   final OnBoardingServices _onBoardingServices = OnBoardingServices();
+
   late List<Todo> _tasks = [];
 
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController noteController = TextEditingController();
   String _name = '';
 
   List<Todo> get tasks => _tasks;
+
   List<Todo> get pendingTasks =>
       _tasks.where((todo) => !todo.isCompleted).toList();
 
@@ -21,16 +26,16 @@ class TaskProvider extends ChangeNotifier {
 
   String get name => _name;
 
-  String _title = '';
-  String _description = '';
+  final String _title = '';
+  final String _note = '';
 
   String get title => _title;
 
-  String get description => _description;
+  String get description => _note;
 
   TaskProvider() {
-    fetchTodos();
     setName();
+    fetchTodos();
   }
 
   void setName() async {
@@ -42,7 +47,7 @@ class TaskProvider extends ChangeNotifier {
     _tasks.add(todo);
     int id = await DatabaseHelper.instance.insert(todo);
     print('Inserted todo with id: $id');
-
+    HapticFeedback.selectionClick();
     notifyListeners();
   }
 
@@ -52,22 +57,23 @@ class TaskProvider extends ChangeNotifier {
       _tasks[index] = Todo(
         id: todo.id,
         title: todo.title,
-        description: todo.description,
+        note: todo.note,
+        priority: todo.priority,
         isCompleted: todo.isCompleted,
+        date: _tasks[index].date,
       );
+      DatabaseHelper.instance.update(_tasks[index]);
+      HapticFeedback.selectionClick();
+
       notifyListeners();
     }
+    clearEditing();
   }
 
   // To fetch all todos
   void fetchTodos() async {
     _tasks = await DatabaseHelper.instance.getAllTodos();
     notifyListeners();
-    // _tasks.forEach((todo) {
-    //   print(
-    //     'Todo ID: ${todo.id} Todo: ${todo.title}, Completed: ${todo.isCompleted}',
-    //   );
-    // });
   }
 
   // To update a todo
@@ -78,6 +84,7 @@ class TaskProvider extends ChangeNotifier {
     _tasks[index].isCompleted = !_tasks[index].isCompleted;
     int rowsAffected = await DatabaseHelper.instance.update(_tasks[index]);
     print('Updated $rowsAffected row(s)');
+    HapticFeedback.selectionClick();
     notifyListeners();
   }
 
@@ -104,11 +111,51 @@ class TaskProvider extends ChangeNotifier {
     // First remove from the list
     _tasks.removeWhere((todo) => todo.id == id);
 
-    // Then notify UI
-    notifyListeners();
-
     // Then remove from database
     int rowsAffected = await DatabaseHelper.instance.delete(id);
-    print('Deleted $rowsAffected row(s)');
+    // print('Deleted $rowsAffected row(s)');
+
+    // Then notify UI
+    notifyListeners();
+    HapticFeedback.selectionClick();
+  }
+
+  void loadTodo(Todo? todo, PriorityProvider priorityProvider) {
+    if (todo != null) {
+      titleController.text = todo.title;
+      noteController.text = todo.note;
+
+      // update priority using the priorityProvider
+      priorityProvider.updatePriority(
+        priorityProvider.stringToPriority(todo.priority),
+      );
+
+      notifyListeners();
+    }
+  }
+
+  void deleteTask(Todo todo, BuildContext context, bool isDark) {
+    removeTodo(todo.id);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Task deleted',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: HelperMethods.themeColor(context),
+        action: SnackBarAction(
+          label: 'Undo',
+          textColor: isDark ? Colors.black : Colors.white,
+
+          onPressed: () => saveTask(todo!),
+        ),
+      ),
+    );
+  }
+
+  // Clear controllers after saving/updating
+  void clearEditing() {
+    titleController.clear();
+    noteController.clear();
   }
 }

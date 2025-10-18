@@ -30,13 +30,17 @@ class CustomIconButton extends StatelessWidget {
         decoration: BoxDecoration(
           // color: AppColors.accentBlueDarkColor,
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(width: 1.5),
+          border: Border.all(
+            width: 1.5,
+            color: HelperMethods.themeColor(context),
+          ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(icon),
+            SizedBox(width: 10),
             Text(
               text,
               style: TextStyle(

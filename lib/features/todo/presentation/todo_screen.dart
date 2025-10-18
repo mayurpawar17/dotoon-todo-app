@@ -1,47 +1,28 @@
-import 'package:dotoon_todo_app/features/todo/presentation/widgets/custom_bottom_sheet.dart';
+import 'package:dotoon_todo_app/features/todo/presentation/widgets/custom_chips.dart';
 import 'package:dotoon_todo_app/features/todo/presentation/widgets/custom_list_tile.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/utils/helper_method.dart';
-import '../../onboarding/provider/onboarding_prodvider.dart';
+import '../../onboarding/provider/onboarding_provider.dart';
 import '../domain/todo_Model.dart';
+import '../provider/chip_filter_provider.dart';
 import '../provider/task_provider.dart';
+import '../utils/bottom_sheet_helper.dart';
 
-class TodoScreen extends StatefulWidget {
-  const TodoScreen({super.key});
+class TodoScreen extends StatelessWidget {
+  TodoScreen({super.key});
 
-  @override
-  State<TodoScreen> createState() => _TodoScreenState();
-}
-
-class _TodoScreenState extends State<TodoScreen> with TickerProviderStateMixin {
-  late final AnimationController _animationController;
-  final DateTime _currentDate = DateTime.now(); // track currently selected date
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = BottomSheet.createAnimationController(this);
-    _animationController.duration = const Duration(milliseconds: 400);
-    _animationController.reverseDuration = const Duration(milliseconds: 300);
-    _animationController.drive(CurveTween(curve: Curves.easeInOut));
-  }
-
+  final DateTime _currentDate = DateTime.now();
   Todo? todo;
 
   @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height * 0.5;
+    final screenHeight = MediaQuery.of(context).size.height;
     final taskProvider = Provider.of<TaskProvider>(context);
+    final chipFilterProvider = Provider.of<ChipFilterProvider>(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
@@ -52,7 +33,7 @@ class _TodoScreenState extends State<TodoScreen> with TickerProviderStateMixin {
             Consumer<OnBoardingProvider>(
               builder: (context, onBoardingProvider, child) {
                 return Text(
-                  'Hello ${taskProvider.name}',
+                  'Hello ${onBoardingProvider.name}',
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
                 );
               },
@@ -75,7 +56,7 @@ class _TodoScreenState extends State<TodoScreen> with TickerProviderStateMixin {
 
               // SizedBox(height: 10),
               Text(
-                'To Do',
+                'Tasks',
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 18,
@@ -83,20 +64,48 @@ class _TodoScreenState extends State<TodoScreen> with TickerProviderStateMixin {
                 ),
               ),
               SizedBox(height: 10),
+              Consumer<ChipFilterProvider>(
+                builder: (context, chipFilterProvider, child) {
+                  return Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children:
+                        chipFilterProvider.chipOptions.map((option) {
+                          final label = option['label'];
+                          final filter = option['filter'] as TodoFilter;
+                          return CustomChips(
+                            text: label,
+                            selected:
+                                chipFilterProvider.selectedFilter == filter,
+                            onTap: () {
+                              chipFilterProvider.updateFilter(filter);
+                            },
+                          );
+                        }).toList(),
+                  );
+                },
+              ),
+              SizedBox(height: 10),
 
               Expanded(
-                child:
-                    taskProvider.tasks.isEmpty
-                        ? Center(
+                child: Builder(
+                  builder: (context) {
+                    if (taskProvider.tasks.isEmpty) {
+                      return Center(
+                        child: SingleChildScrollView(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Image.asset('assets/no_task1.jpg', height: 300),
+                              SizedBox(
+                                height: screenHeight * 0.3,
+                                child: Lottie.asset('assets/noTaskLottie.json'),
+                              ),
+                              const SizedBox(height: 10),
 
                               Text(
                                 'Nothing here yet!',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w700,
+                                  fontSize: 18,
                                   color: HelperMethods.themeColor(context),
                                 ),
                               ),
@@ -108,57 +117,76 @@ class _TodoScreenState extends State<TodoScreen> with TickerProviderStateMixin {
                               ),
                             ],
                           ),
-                        )
-                        : ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: taskProvider.tasks.length,
-                          itemBuilder: (context, index) {
-                            final todo = taskProvider.tasks[index];
-                            return Dismissible(
-                              key: ValueKey(todo.id),
-                              background: Container(
-                                alignment: Alignment.centerRight,
-                                padding: EdgeInsets.symmetric(horizontal: 20),
-                                color: Colors.red,
-                                child: Icon(Icons.delete, color: Colors.white),
-                              ),
-
-                              direction: DismissDirection.endToStart,
-                              onDismissed: (direction) {
-                                taskProvider.removeTodo(todo.id);
-
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    backgroundColor:
-                                        isDark ? Colors.white : Colors.black,
-                                    content: Text('Task deleted'),
-                                    action: SnackBarAction(
-                                      label: 'Undo',
-                                      textColor:
-                                          isDark ? Colors.black : Colors.white,
-                                      onPressed: () {
-                                        taskProvider.saveTask(todo);
-                                      },
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: CustomListTile(
-                                onTap: () {
-                                  _openAddTaskSheet(context, todo);
-                                  HapticFeedback.selectionClick();
-                                },
-                                todo: todo,
-                                isCompleted: todo.isCompleted,
-                                onChanged: () {
-                                  taskProvider.markAsComplete(todo);
-                                  HapticFeedback.lightImpact();
-                                },
-                              ),
-                            );
-                          },
                         ),
+                      );
+                    }
+
+                    final selected = chipFilterProvider.selectedFilter;
+                    List<Todo> displayList;
+
+                    switch (selected) {
+                      case TodoFilter.all:
+                        displayList = taskProvider.tasks;
+                        break;
+                      case TodoFilter.pending:
+                        displayList = taskProvider.pendingTasks;
+                        break;
+                      case TodoFilter.completed:
+                        displayList = taskProvider.completedTasks;
+                        break;
+                    }
+
+                    if (displayList.isEmpty) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: screenHeight * 0.3,
+                              child: Lottie.asset('assets/noTaskLottie.json'),
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              'No ${selected == TodoFilter.completed ? 'Completed' : 'Pending'} tasks found!',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 18,
+                                color: HelperMethods.themeColor(context),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
+                    // Show filtered list
+                    return ListView.builder(
+                      itemCount: displayList.length,
+                      itemBuilder: (context, index) {
+                        final todo = displayList[index];
+                        return Dismissible(
+                          key: ValueKey(todo.id),
+                          background: Container(
+                            alignment: Alignment.centerRight,
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            color: Colors.red,
+                            child: Icon(Icons.delete, color: Colors.white),
+                          ),
+                          direction: DismissDirection.endToStart,
+                          onDismissed: (direction) {
+                            taskProvider.deleteTask(todo, context, isDark);
+                          },
+                          child: CustomListTile(
+                            todo: todo,
+                            isCompleted: todo.isCompleted,
+                            onChanged: () => taskProvider.markAsComplete(todo),
+                            onTap: () => openAddTaskSheet(context, todo),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
             ],
           ),
@@ -166,30 +194,13 @@ class _TodoScreenState extends State<TodoScreen> with TickerProviderStateMixin {
       ),
 
       floatingActionButton: FloatingActionButton(
-        elevation: 0,
         onPressed: () {
-          _openAddTaskSheet(context, todo);
+          openAddTaskSheet(context, todo);
         },
         child: Icon(Icons.add, color: isDark ? Colors.black : Colors.white),
       ),
       floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-    );
-  }
-
-  void _openAddTaskSheet(context, Todo? todo) {
-    showModalBottomSheet(
-      transitionAnimationController: _animationController,
-      context: context,
-      // expands with keyboard
-      isScrollControlled: true,
-
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (context) {
-        return CustomBottomSheet(todo: todo);
-      },
     );
   }
 }
