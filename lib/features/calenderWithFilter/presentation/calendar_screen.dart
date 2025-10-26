@@ -6,6 +6,7 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../../../core/utils/helper_method.dart';
 import '../../todo/presentation/widgets/custom_list_tile.dart';
 import '../../todo/provider/task_provider.dart';
+import '../../todo/utils/bottom_sheet_helper.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -110,10 +111,25 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           itemBuilder: (context, index) {
                             final todo =
                                 taskProvider.tasksForSelectedDate[index];
-                            return CustomListTile(
-                              todo: todo,
-                              isCompleted: todo.isCompleted,
-                              onChanged: (val) {},
+                            return Dismissible(
+                              key: ValueKey(todo.id),
+                              background: Container(
+                                alignment: Alignment.centerRight,
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                color: Colors.red,
+                                child: Icon(Icons.delete, color: Colors.white),
+                              ),
+                              direction: DismissDirection.endToStart,
+                              onDismissed: (direction) {
+                                taskProvider.deleteTask(todo, context, isDark);
+                              },
+                              child: CustomListTile(
+                                todo: todo,
+                                isCompleted: todo.isCompleted,
+                                onChanged:
+                                    () => taskProvider.markAsComplete(todo),
+                                onTap: () => openAddTaskSheet(context, todo),
+                              ),
                             );
                           },
                         ),

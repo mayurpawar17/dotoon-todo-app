@@ -9,22 +9,36 @@ import '../../domain/todo_Model.dart';
 import '../../provider/priority_provider.dart';
 import '../../provider/task_provider.dart';
 
-class CustomBottomSheet extends StatelessWidget {
-  final Todo? todo; // nullable for editing
+class CustomBottomSheet extends StatefulWidget {
+  final Todo? todo;
   const CustomBottomSheet({super.key, this.todo});
+
+  @override
+  _CustomBottomSheetState createState() => _CustomBottomSheetState();
+}
+
+class _CustomBottomSheetState extends State<CustomBottomSheet> {
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.todo != null) {
+      // Ensures this runs AFTER first frame to avoid build-time errors
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final taskProvider = Provider.of<TaskProvider>(context, listen: false);
+        final priorityProvider = Provider.of<PriorityProvider>(
+          context,
+          listen: false,
+        );
+        taskProvider.loadTodo(widget.todo, priorityProvider);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final taskProvider = Provider.of<TaskProvider>(context, listen: false);
-    final priorityProvider = Provider.of<PriorityProvider>(
-      context,
-      listen: false,
-    );
-
-    if (todo != null) {
-      taskProvider.loadTodo(todo, priorityProvider);
-    }
 
     return SafeArea(
       child: Container(
@@ -35,7 +49,7 @@ class CustomBottomSheet extends StatelessWidget {
           ),
         ),
         padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom, // avoid keyboard
+          bottom: MediaQuery.of(context).viewInsets.bottom,
           left: 16,
           right: 16,
           top: 10,
@@ -44,7 +58,6 @@ class CustomBottomSheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //Title
             TextField(
               controller: taskProvider.titleController,
               cursorColor: HelperMethods.themeColor(context),
@@ -61,7 +74,6 @@ class CustomBottomSheet extends StatelessWidget {
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
             ),
 
-            //Note
             TextField(
               controller: taskProvider.noteController,
               cursorColor: HelperMethods.themeColor(context),
@@ -76,7 +88,6 @@ class CustomBottomSheet extends StatelessWidget {
             ),
             const SizedBox(height: 12),
 
-            //Priority dropdown + icons
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -143,21 +154,11 @@ class CustomBottomSheet extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                // CustomIconButton(
-                //   onTap: () {},
-                //   text: 'Calendar',
-                //   icon: EvaIcons.calendarOutline,
-                // ),
-                // const SizedBox(width: 8),
-                // CustomIconButton(
-                //   onTap: () {},
-                //   text: 'Reminder',
-                //   icon: EvaIcons.clockOutline,
-                // ),
-                todo != null
+
+                widget.todo != null
                     ? IconButton(
                       onPressed: () {
-                        taskProvider.deleteTask(todo!, context, isDark);
+                        taskProvider.deleteTask(widget.todo!, context, isDark);
                         Navigator.pop(context);
                       },
                       icon: Icon(
@@ -171,11 +172,10 @@ class CustomBottomSheet extends StatelessWidget {
 
             const SizedBox(height: 12),
 
-            //Save / Update Button
             Consumer<PriorityProvider>(
               builder: (context, priorityProvider, _) {
                 return CustomButton(
-                  text: todo != null ? "Update Task" : "Save Task",
+                  text: widget.todo != null ? "Update Task" : "Save Task",
                   onTap: () {
                     final title = taskProvider.titleController.text.trim();
                     final note = taskProvider.noteController.text.trim();
@@ -186,19 +186,17 @@ class CustomBottomSheet extends StatelessWidget {
                       priorityProvider.selectedPriority,
                     );
 
-                    if (todo != null) {
-                      //Update
+                    if (widget.todo != null) {
                       taskProvider.updateTask(
                         Todo(
-                          id: todo!.id,
+                          id: widget.todo!.id,
                           title: title,
                           note: note,
                           priority: priorityString,
-                          isCompleted: todo!.isCompleted,
+                          isCompleted: widget.todo!.isCompleted,
                         ),
                       );
                     } else {
-                      // Save
                       taskProvider.saveTask(
                         Todo(
                           title: title,
