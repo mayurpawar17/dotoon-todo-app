@@ -1,32 +1,37 @@
 import 'package:flutter/material.dart';
 
-import '../utils/helper_method.dart';
-
 class CustomButton extends StatelessWidget {
   const CustomButton({
     super.key,
     required this.text,
     required this.onTap,
-    this.widget,
+    required this.btnHeight,
+    required this.btnWidth,
+    this.bgColor,
+    this.textColor,
   });
 
   final String text;
   final VoidCallback onTap;
-  final widget;
+  final double btnHeight;
+  final double btnWidth;
+  final bgColor;
+  final textColor;
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height * 0.07;
+    // final screenHeight = MediaQuery.of(context).size.height;
+    // final screenWidth = MediaQuery.of(context).size.width;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Material(
       borderRadius: BorderRadius.circular(15),
-      color: HelperMethods.themeColor(context),
+      color: bgColor,
       child: InkWell(
         borderRadius: BorderRadius.circular(15),
         onTap: onTap,
         child: Container(
-          height: height,
-          width: double.infinity,
+          height: btnHeight,
+          width: btnWidth,
           decoration: BoxDecoration(
             // color: AppColors.accentBlueDarkColor,
             borderRadius: BorderRadius.circular(15),
@@ -37,13 +42,8 @@ class CustomButton extends StatelessWidget {
             children: [
               Text(
                 text,
-                style: TextStyle(
-                  color: isDark ? Colors.black : Colors.white,
-                  fontWeight: FontWeight.w700,
-                ),
+                style: TextStyle(color: textColor, fontWeight: FontWeight.w700),
               ),
-              SizedBox(width: 6),
-              widget,
             ],
           ),
         ),

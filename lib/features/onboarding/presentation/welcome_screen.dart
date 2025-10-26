@@ -1,9 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:dotoon_todo_app/core/widgets/custom_icon_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/utils/helper_method.dart';
-import '../../../core/widgets/custom_button.dart';
 import '../../../core/widgets/dotoon_logo.dart';
 import '../../todo/presentation/home_screen.dart';
 import '../data/onboarding_services.dart';
@@ -81,10 +81,10 @@ class WelcomeScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: screenHeight * 0.1),
+
                     Consumer<OnBoardingProvider>(
                       builder: (context, onBoardingProvider, child) {
-                        return CustomButton(
-                          text: 'Continue',
+                        return CustomIconButton(
                           onTap: () async {
                             final name =
                                 onBoardingProvider.nameController.text.trim();
@@ -101,11 +101,13 @@ class WelcomeScreen extends StatelessWidget {
                               onBoardingProvider.clearEditing();
                             }
                           },
-                          widget: Icon(
-                            Icons.arrow_forward,
-                            color: isDark ? Colors.black : Colors.white,
-                            size: 20,
-                          ),
+                          iconData: Icons.arrow_forward,
+                          text: 'Continue',
+                          btnHeight: screenHeight * 0.07,
+                          btnWidth: screenWidth * 1.0,
+                          bgColor: isDark ? Colors.white : Colors.black,
+                          textColor: isDark ? Colors.black : Colors.white,
+                          iconColor: isDark ? Colors.black : Colors.white,
                         );
                       },
                     ),

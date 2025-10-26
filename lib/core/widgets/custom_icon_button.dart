@@ -1,54 +1,55 @@
 import 'package:flutter/material.dart';
 
-import '../utils/helper_method.dart';
-
 class CustomIconButton extends StatelessWidget {
-  final height;
-  final weight;
-  final onTap;
-  final text;
-  final icon;
+  final String text;
+  final VoidCallback onTap;
+  final double btnHeight;
+  final double btnWidth;
+  final IconData iconData;
+  final bgColor;
+  final textColor;
+  final iconColor;
 
   const CustomIconButton({
     super.key,
-    this.height,
-    this.weight,
-    this.onTap,
-    this.text,
-    this.icon,
+    required this.text,
+    required this.onTap,
+    required this.btnHeight,
+    required this.btnWidth,
+    required this.iconData,
+    this.bgColor,
+    this.textColor,
+    this.iconColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return Material(
       borderRadius: BorderRadius.circular(15),
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.all(4),
-        height: height,
-        width: weight,
-        decoration: BoxDecoration(
-          // color: AppColors.accentBlueDarkColor,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            width: 1.5,
-            color: HelperMethods.themeColor(context),
+      color: bgColor,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(15),
+        onTap: onTap,
+        child: Container(
+          padding: EdgeInsets.all(4),
+          height: btnHeight,
+          width: btnWidth,
+          decoration: BoxDecoration(
+            // color: AppColors.accentBlueDarkColor,
+            borderRadius: BorderRadius.circular(15),
           ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Icon(icon),
-            SizedBox(width: 10),
-            Text(
-              text,
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                color: HelperMethods.themeColor(context),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                text,
+                style: TextStyle(fontWeight: FontWeight.w700, color: textColor),
               ),
-            ),
-          ],
+              SizedBox(width: 10),
+              Icon(iconData, size: 20, color: iconColor),
+            ],
+          ),
         ),
       ),
     );

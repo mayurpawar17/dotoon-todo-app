@@ -1,16 +1,17 @@
+import 'package:dotoon_todo_app/core/widgets/custom_button.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/utils/helper_method.dart';
-import '../../../../core/widgets/custom_button.dart';
 import '../../domain/todo_Model.dart';
 import '../../provider/priority_provider.dart';
 import '../../provider/task_provider.dart';
 
 class CustomBottomSheet extends StatefulWidget {
   final Todo? todo;
+
   const CustomBottomSheet({super.key, this.todo});
 
   @override
@@ -39,6 +40,8 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final taskProvider = Provider.of<TaskProvider>(context, listen: false);
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return SafeArea(
       child: Container(
@@ -171,7 +174,6 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
             ),
 
             const SizedBox(height: 12),
-
             Consumer<PriorityProvider>(
               builder: (context, priorityProvider, _) {
                 return CustomButton(
@@ -209,11 +211,14 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                     Navigator.pop(context);
                     taskProvider.clearEditing();
                   },
-                  widget: Container(),
+                  btnHeight: screenHeight * 0.07,
+                  btnWidth: screenWidth * 1.0,
+                  bgColor: HelperMethods.themeColor(context),
+                  textColor: isDark ? Colors.black : Colors.white,
                 );
               },
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: screenHeight * 0.02),
           ],
         ),
       ),

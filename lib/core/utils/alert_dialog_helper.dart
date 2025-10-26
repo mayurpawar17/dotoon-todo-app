@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../features/onboarding/provider/onboarding_provider.dart';
-import '../widgets/custom_btn.dart';
+import '../widgets/custom_button.dart';
 import 'helper_method.dart';
 
 void showCustomDialog(BuildContext context) {
@@ -40,7 +40,7 @@ void showCustomDialog(BuildContext context) {
               ],
             ),
             actions: [
-              CustomBtn(
+              CustomButton(
                 bgColor: Colors.red,
                 textColor: Colors.white,
                 text: 'Cancel',
@@ -52,7 +52,7 @@ void showCustomDialog(BuildContext context) {
                 btnWidth: screenWidth * 0.2,
               ),
 
-              CustomBtn(
+              CustomButton(
                 bgColor: isDark ? Colors.black : Colors.white,
                 textColor: isDark ? Colors.white : Colors.black,
                 text: 'Save',
