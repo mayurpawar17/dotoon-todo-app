@@ -6,14 +6,16 @@ import 'features/onboarding/presentation/welcome_screen.dart';
 import 'features/onboarding/provider/onboarding_provider.dart';
 import 'features/theme/presentation/app_themes.dart';
 import 'features/theme/provider/theme_provider.dart';
-import 'features/todo/presentation/home_screen.dart';
+import 'features/todo/presentation/screens/home_screen.dart';
 import 'features/todo/provider/bottom_navigation_provider.dart';
 import 'features/todo/provider/chip_filter_provider.dart';
 import 'features/todo/provider/priority_provider.dart';
 import 'features/todo/provider/task_provider.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  // Keep splash until initialization completes
+  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   bool onboarded = await OnBoardingServices.isOnboarded();
 
   runApp(
@@ -35,7 +37,10 @@ Future<void> main() async {
 
       child: MyApp(onboarded: onboarded),
     ),
+
+    // Once done, remove it
   );
+  // FlutterNativeSplash.remove();
 }
 
 class MyApp extends StatelessWidget {

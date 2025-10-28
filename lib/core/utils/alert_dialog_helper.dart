@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../features/onboarding/provider/onboarding_provider.dart';
+import '../theme/app_colors.dart';
 import '../widgets/custom_button.dart';
 import 'helper_method.dart';
 
@@ -24,16 +25,20 @@ void showCustomDialog(BuildContext context) {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
-            backgroundColor: HelperMethods.themeColor(context),
+            backgroundColor:
+                isDark ? AppColors.primaryColorDarkMode : Colors.white,
 
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
                   cursorOpacityAnimates: true,
-                  cursorColor: isDark ? Colors.black : Colors.white,
+                  cursorColor: HelperMethods.firstWhiteColor(context),
+
                   autofocus: true,
-                  style: TextStyle(color: isDark ? Colors.black : Colors.white),
+                  style: TextStyle(
+                    color: HelperMethods.firstWhiteColor(context),
+                  ),
                   controller: onBoardingProvider.nameController,
                   decoration: InputDecoration(border: InputBorder.none),
                 ),
@@ -53,8 +58,8 @@ void showCustomDialog(BuildContext context) {
               ),
 
               CustomButton(
-                bgColor: isDark ? Colors.black : Colors.white,
-                textColor: isDark ? Colors.white : Colors.black,
+                bgColor: HelperMethods.firstWhiteColor(context),
+                textColor: isDark ? Colors.black : Colors.white,
                 text: 'Save',
                 onTap: () {
                   final rename = onBoardingProvider.nameController.text.trim();

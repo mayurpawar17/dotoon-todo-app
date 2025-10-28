@@ -1,4 +1,4 @@
-package com.example.dotoon_todo_app
+package com.devmayur.dotoon
 
 import io.flutter.embedding.android.FlutterActivity
 

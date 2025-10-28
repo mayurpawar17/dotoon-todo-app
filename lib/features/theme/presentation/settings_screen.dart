@@ -48,7 +48,7 @@ class SettingsScreen extends StatelessWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 18,
-                  color: HelperMethods.themeColor(context),
+                  color: HelperMethods.firstWhiteColor(context),
                 ),
               ),
               SizedBox(height: 10),
@@ -63,7 +63,7 @@ class SettingsScreen extends StatelessWidget {
                       return Text(
                         onBoardingProvider.name ?? 'no name',
                         style: TextStyle(
-                          color: HelperMethods.themeColor(context),
+                          color: HelperMethods.firstWhiteColor(context),
                           fontWeight: FontWeight.w600,
                         ),
                       );
@@ -72,7 +72,7 @@ class SettingsScreen extends StatelessWidget {
                   trailing: SizedBox(
                     child: Icon(
                       EvaIcons.editOutline,
-                      color: HelperMethods.themeColor(context),
+                      color: HelperMethods.firstWhiteColor(context),
                     ),
                   ),
                 ),
@@ -83,20 +83,20 @@ class SettingsScreen extends StatelessWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 18,
-                  color: HelperMethods.themeColor(context),
+                  color: HelperMethods.firstWhiteColor(context),
                 ),
               ),
               SizedBox(height: 10),
 
               ListTile(
                 leading: Icon(
-                  isDark ? EvaIcons.moon : EvaIcons.sun,
-                  color: HelperMethods.themeColor(context),
+                  EvaIcons.moon,
+                  color: HelperMethods.firstWhiteColor(context),
                 ),
                 title: Text(
-                  '${isDark ? 'Dark' : 'Light'} Theme',
+                  'Dark Theme',
                   style: TextStyle(
-                    color: HelperMethods.themeColor(context),
+                    color: HelperMethods.firstWhiteColor(context),
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -122,7 +122,7 @@ class SettingsScreen extends StatelessWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 18,
-                  color: HelperMethods.themeColor(context),
+                  color: HelperMethods.firstWhiteColor(context),
                 ),
               ),
 
@@ -130,12 +130,12 @@ class SettingsScreen extends StatelessWidget {
               ListTile(
                 leading: Icon(
                   EvaIcons.share,
-                  color: HelperMethods.themeColor(context),
+                  color: HelperMethods.firstWhiteColor(context),
                 ),
                 title: Text(
                   'Share with friends',
                   style: TextStyle(
-                    color: HelperMethods.themeColor(context),
+                    color: HelperMethods.firstWhiteColor(context),
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -159,12 +159,12 @@ class SettingsScreen extends StatelessWidget {
               ListTile(
                 leading: Icon(
                   Icons.apps,
-                  color: HelperMethods.themeColor(context),
+                  color: HelperMethods.firstWhiteColor(context),
                 ),
                 title: Text(
                   'Our Apps',
                   style: TextStyle(
-                    color: HelperMethods.themeColor(context),
+                    color: HelperMethods.firstWhiteColor(context),
                     fontWeight: FontWeight.w600,
                   ),
                 ),

@@ -4,14 +4,16 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
 
+//primary color dark mode => #1F1F1F
+//secondary color dark mode => #282828
+
 class AppThemes {
   // Light Theme
   static final ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
-    primarySwatch: AppColors.createMaterialColor(AppColors.accentBlueDarkColor),
     scaffoldBackgroundColor: Colors.white,
-    appBarTheme: const AppBarTheme(
-      backgroundColor: AppColors.primaryColor2,
+    appBarTheme: AppBarTheme(
+      backgroundColor: Colors.white,
       foregroundColor: Colors.black,
       elevation: 0,
       // centerTitle: true,
@@ -41,7 +43,7 @@ class AppThemes {
 
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: Colors.white,
-      selectedItemColor: Colors.orange,
+      selectedItemColor: Colors.black,
       unselectedItemColor: Colors.grey,
       showUnselectedLabels: true,
       type: BottomNavigationBarType.fixed,
@@ -69,12 +71,11 @@ class AppThemes {
   static final ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
     primarySwatch: Colors.deepPurple,
-    scaffoldBackgroundColor: Colors.black,
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Colors.black,
+    scaffoldBackgroundColor: AppColors.primaryColorDarkMode,
+    appBarTheme: AppBarTheme(
+      backgroundColor: AppColors.primaryColorDarkMode,
       foregroundColor: Colors.white,
       elevation: 0,
-      // centerTitle: true,
     ),
     fontFamily: GoogleFonts.openSans().fontFamily,
     textTheme: const TextTheme(
@@ -100,9 +101,9 @@ class AppThemes {
       },
     ),
 
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      backgroundColor: Colors.black,
-      selectedItemColor: Colors.orange,
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      backgroundColor: AppColors.secondaryColorDarkMode,
+      selectedItemColor: Colors.white,
       unselectedItemColor: Colors.grey,
       showUnselectedLabels: true,
       type: BottomNavigationBarType.fixed,

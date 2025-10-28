@@ -1,16 +1,17 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:dotoon_todo_app/core/widgets/custom_icon_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/utils/helper_method.dart';
+import '../../../core/widgets/custom_icon_button.dart';
 import '../../../core/widgets/dotoon_logo.dart';
-import '../../todo/presentation/home_screen.dart';
+import '../../todo/presentation/screens/home_screen.dart';
 import '../data/onboarding_services.dart';
 import '../provider/onboarding_provider.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -44,17 +45,17 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                 ),
 
-                SizedBox(height: screenHeight * 0.1),
+                SizedBox(height: screenHeight * 0.02),
 
                 AutoSizeText(
                   'Focus on what matters',
                   maxLines: 1,
                   style: TextStyle(
                     fontSize: 30,
-                    color: HelperMethods.themeColor(context),
+                    color: HelperMethods.firstWhiteColor(context),
                   ),
                 ),
-                SizedBox(height: screenHeight * 0.1),
+                SizedBox(height: screenHeight * 0.05),
 
                 Column(
                   children: [
@@ -67,7 +68,7 @@ class WelcomeScreen extends StatelessWidget {
                       child: Consumer<OnBoardingProvider>(
                         builder: (context, onBoardingProvider, child) {
                           return TextField(
-                            cursorColor: HelperMethods.themeColor(context),
+                            cursorColor: HelperMethods.firstWhiteColor(context),
                             controller: onBoardingProvider.nameController,
                             autofocus: true,
                             decoration: InputDecoration(
@@ -98,7 +99,10 @@ class WelcomeScreen extends StatelessWidget {
                                   builder: (context) => HomeScreen(),
                                 ),
                               );
-                              onBoardingProvider.clearEditing();
+                              Future.delayed(
+                                Duration(milliseconds: 500),
+                                () => onBoardingProvider.clearEditing(),
+                              );
                             }
                           },
                           iconData: Icons.arrow_forward,

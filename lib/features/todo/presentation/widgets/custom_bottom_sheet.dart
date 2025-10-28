@@ -1,10 +1,10 @@
-import 'package:dotoon_todo_app/core/widgets/custom_button.dart';
+import 'package:dotoon_todo_app/features/todo/presentation/widgets/priority_selector_sheet.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/utils/helper_method.dart';
+import '../../../../core/widgets/custom_button.dart';
 import '../../domain/todo_Model.dart';
 import '../../provider/priority_provider.dart';
 import '../../provider/task_provider.dart';
@@ -63,14 +63,15 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
           children: [
             TextField(
               controller: taskProvider.titleController,
-              cursorColor: HelperMethods.themeColor(context),
+              cursorColor: HelperMethods.firstWhiteColor(context),
               autofocus: true,
               decoration: InputDecoration(
-                hintText: "Type your next task here",
+                hintText: " e.g. Type your next task here",
                 hintStyle: TextStyle(
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w500,
                   fontSize: 18,
-                  color: HelperMethods.themeColor(context),
+                  // color: HelperMethods.themeColor(context),
+                  color: Colors.grey,
                 ),
                 border: InputBorder.none,
               ),
@@ -79,12 +80,12 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
 
             TextField(
               controller: taskProvider.noteController,
-              cursorColor: HelperMethods.themeColor(context),
+              cursorColor: HelperMethods.firstWhiteColor(context),
               decoration: InputDecoration(
                 hintText: "Note",
                 hintStyle: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  color: HelperMethods.themeColor(context),
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey,
                 ),
                 border: InputBorder.none,
               ),
@@ -94,66 +95,52 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  height: 34,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      width: 1.5,
-                      color: HelperMethods.themeColor(context),
+                GestureDetector(
+                  onTap: () {
+                    showModalBottomSheet(
+                      context: context,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(16),
+                        ),
+                      ),
+                      builder: (_) => PrioritySelectorSheet(),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
                     ),
-                  ),
-                  child: Consumer<PriorityProvider>(
-                    builder: (context, priorityProvider, child) {
-                      return DropdownButtonHideUnderline(
-                        child: DropdownButton<PriorityLevel>(
-                          icon: Icon(
-                            EvaIcons.arrowDownOutline,
-                            color: HelperMethods.themeColor(context),
-                          ),
-                          value: priorityProvider.selectedPriority,
-                          items: const [
-                            DropdownMenuItem(
-                              value: PriorityLevel.low,
-                              child: Text(
-                                'Low',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700,
-                                ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: HelperMethods.firstWhiteColor(context),
+                        width: 0.5,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          EvaIcons.flagOutline,
+                          color: HelperMethods.firstWhiteColor(context),
+                        ),
+                        const SizedBox(width: 8),
+                        Consumer<PriorityProvider>(
+                          builder: (context, pp, _) {
+                            return Text(
+                              pp.priorityToString(pp.selectedPriority),
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700,
                               ),
-                            ),
-                            DropdownMenuItem(
-                              value: PriorityLevel.medium,
-                              child: Text(
-                                'Medium',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                            DropdownMenuItem(
-                              value: PriorityLevel.high,
-                              child: Text(
-                                'High',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                          ],
-                          onChanged: (value) {
-                            if (value != null) {
-                              priorityProvider.updatePriority(value);
-                            }
-                            HapticFeedback.selectionClick();
+                            );
                           },
                         ),
-                      );
-                    },
+                        const Icon(Icons.keyboard_arrow_down_rounded, size: 20),
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -161,13 +148,10 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                 widget.todo != null
                     ? IconButton(
                       onPressed: () {
-                        taskProvider.deleteTask(widget.todo!, context, isDark);
+                        taskProvider.deleteTask(widget.todo!, context);
                         Navigator.pop(context);
                       },
-                      icon: Icon(
-                        Icons.delete,
-                        color: HelperMethods.themeColor(context),
-                      ),
+                      icon: Icon(Icons.delete, color: Colors.red),
                     )
                     : Container(),
               ],
@@ -213,7 +197,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                   },
                   btnHeight: screenHeight * 0.07,
                   btnWidth: screenWidth * 1.0,
-                  bgColor: HelperMethods.themeColor(context),
+                  bgColor: HelperMethods.firstWhiteColor(context),
                   textColor: isDark ? Colors.black : Colors.white,
                 );
               },

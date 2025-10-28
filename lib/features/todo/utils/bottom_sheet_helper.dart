@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/utils/helper_method.dart';
 import '../domain/todo_Model.dart';
 import '../presentation/widgets/custom_bottom_sheet.dart';
 import '../provider/priority_provider.dart';
@@ -20,6 +21,7 @@ void openAddTaskSheet(context, Todo? todo) {
     PriorityLevel.low,
   ); // reset dropdown to default
   showModalBottomSheet(
+    backgroundColor: HelperMethods.firstDarkColor(context),
     context: context,
     isScrollControlled: true,
     shape: const RoundedRectangleBorder(

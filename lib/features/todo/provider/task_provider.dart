@@ -134,7 +134,7 @@ class TaskProvider extends ChangeNotifier {
     }
   }
 
-  void deleteTask(Todo todo, BuildContext context, bool isDark) {
+  void deleteTask(Todo todo, BuildContext context) {
     removeTodo(todo.id);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -142,10 +142,10 @@ class TaskProvider extends ChangeNotifier {
           'Task deleted',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: HelperMethods.themeColor(context),
+        backgroundColor: HelperMethods.firstWhiteColor(context),
         action: SnackBarAction(
           label: 'Undo',
-          textColor: isDark ? Colors.black : Colors.white,
+          textColor: HelperMethods.firstDarkTextColor(context),
 
           onPressed: () => saveTask(todo!),
         ),

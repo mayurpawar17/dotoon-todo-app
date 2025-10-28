@@ -19,7 +19,7 @@ class DotoonLogo extends StatelessWidget {
           style: TextStyle(
             fontWeight: FontWeight.w700,
             fontSize: 26,
-            color: HelperMethods.themeColor(context),
+            color: HelperMethods.firstWhiteColor(context),
           ),
         ),
       ],

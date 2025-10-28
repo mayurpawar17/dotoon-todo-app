@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../calenderWithFilter/presentation/calendar_screen.dart';
 import '../../theme/presentation/settings_screen.dart';
-import '../presentation/todo_screen.dart';
+import '../presentation/screens/todo_screen.dart';
 
 class BottomNavigationProvider extends ChangeNotifier {
   int _selectedIndex = 0;

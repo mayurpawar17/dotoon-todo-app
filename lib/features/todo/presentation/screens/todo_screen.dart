@@ -1,16 +1,16 @@
-import 'package:dotoon_todo_app/features/todo/presentation/widgets/custom_chips.dart';
-import 'package:dotoon_todo_app/features/todo/presentation/widgets/custom_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/utils/helper_method.dart';
-import '../../onboarding/provider/onboarding_provider.dart';
-import '../domain/todo_Model.dart';
-import '../provider/chip_filter_provider.dart';
-import '../provider/task_provider.dart';
-import '../utils/bottom_sheet_helper.dart';
+import '../../../../core/utils/helper_method.dart';
+import '../../../onboarding/provider/onboarding_provider.dart';
+import '../../domain/todo_Model.dart';
+import '../../provider/chip_filter_provider.dart';
+import '../../provider/task_provider.dart';
+import '../../utils/bottom_sheet_helper.dart';
+import '../widgets/custom_chips.dart';
+import '../widgets/custom_list_tile.dart';
 
 class TodoScreen extends StatelessWidget {
   TodoScreen({super.key});
@@ -60,7 +60,7 @@ class TodoScreen extends StatelessWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 18,
-                  color: HelperMethods.themeColor(context),
+                  color: HelperMethods.firstWhiteColor(context),
                 ),
               ),
               SizedBox(height: 10),
@@ -106,13 +106,13 @@ class TodoScreen extends StatelessWidget {
                                 style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 18,
-                                  color: HelperMethods.themeColor(context),
+                                  color: HelperMethods.firstWhiteColor(context),
                                 ),
                               ),
                               Text(
                                 'Add your first task and get started',
                                 style: TextStyle(
-                                  color: HelperMethods.themeColor(context),
+                                  color: HelperMethods.firstWhiteColor(context),
                                 ),
                               ),
                             ],
@@ -151,7 +151,7 @@ class TodoScreen extends StatelessWidget {
                               style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 18,
-                                color: HelperMethods.themeColor(context),
+                                color: HelperMethods.firstWhiteColor(context),
                               ),
                             ),
                           ],
@@ -164,24 +164,10 @@ class TodoScreen extends StatelessWidget {
                       itemCount: displayList.length,
                       itemBuilder: (context, index) {
                         final todo = displayList[index];
-                        return Dismissible(
-                          key: ValueKey(todo.id),
-                          background: Container(
-                            alignment: Alignment.centerRight,
-                            padding: EdgeInsets.symmetric(horizontal: 20),
-                            color: Colors.red,
-                            child: Icon(Icons.delete, color: Colors.white),
-                          ),
-                          direction: DismissDirection.endToStart,
-                          onDismissed: (direction) {
-                            taskProvider.deleteTask(todo, context, isDark);
-                          },
-                          child: CustomListTile(
-                            todo: todo,
-                            isCompleted: todo.isCompleted,
-                            onChanged: () => taskProvider.markAsComplete(todo),
-                            onTap: () => openAddTaskSheet(context, todo),
-                          ),
+                        return CustomListTile(
+                          todo: todo,
+                          isCompleted: todo.isCompleted,
+                          onChanged: () => taskProvider.markAsComplete(todo),
                         );
                       },
                     );
@@ -197,7 +183,10 @@ class TodoScreen extends StatelessWidget {
         onPressed: () {
           openAddTaskSheet(context, todo);
         },
-        child: Icon(Icons.add, color: isDark ? Colors.black : Colors.white),
+        child: Icon(
+          Icons.add,
+          color: HelperMethods.firstDarkIconColor(context),
+        ),
       ),
       floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

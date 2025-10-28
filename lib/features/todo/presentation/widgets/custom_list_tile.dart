@@ -1,26 +1,30 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/date_time_helper_method.dart';
 import '../../../../core/utils/helper_method.dart';
 import '../../domain/todo_Model.dart';
 import '../../provider/priority_provider.dart';
+import '../../provider/task_provider.dart';
+import '../../utils/bottom_sheet_helper.dart';
 
 class CustomListTile extends StatelessWidget {
-  const CustomListTile({
+  CustomListTile({
     super.key,
     required this.todo,
     required this.isCompleted,
     this.onChanged,
-    this.onTap,
   });
 
   final Todo todo; // single todo item
   final bool isCompleted; // checkbox state
   final Function? onChanged; // toggle callback
-  final onTap;
+
+  final MenuController _menuController = MenuController();
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +62,10 @@ class CustomListTile extends StatelessWidget {
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey, width: 1.0),
                     borderRadius: BorderRadius.circular(6),
-                    color: isCompleted ? Colors.black : Colors.transparent,
+                    color:
+                        isCompleted
+                            ? AppColors.primaryColorDarkMode
+                            : Colors.transparent,
                   ),
                   child:
                       isCompleted
@@ -84,7 +91,7 @@ class CustomListTile extends StatelessWidget {
                                 : TextDecoration.none,
                         decorationThickness: 6,
                         fontWeight: FontWeight.w700,
-                        color: HelperMethods.themeColor(context),
+                        color: HelperMethods.firstWhiteColor(context),
                       ),
                     ),
                     todo.note.isNotEmpty
@@ -96,7 +103,7 @@ class CustomListTile extends StatelessWidget {
                                     ? TextDecoration.lineThrough
                                     : TextDecoration.none,
                             decorationThickness: 3,
-                            color: HelperMethods.themeColor(context),
+                            color: HelperMethods.firstWhiteColor(context),
                           ),
                         )
                         : Container(),
@@ -115,7 +122,6 @@ class CustomListTile extends StatelessWidget {
                       Consumer<PriorityProvider>(
                         builder: (context, priorityProvider, child) {
                           String currentPriority = todo.priority;
-
                           Color bgColor;
                           switch (currentPriority) {
                             case 'High':
@@ -138,13 +144,13 @@ class CustomListTile extends StatelessWidget {
                             ),
                             decoration: BoxDecoration(
                               color: bgColor,
-                              borderRadius: BorderRadius.circular(4),
+                              borderRadius: BorderRadius.circular(2),
                             ),
                             child: Text(
                               currentPriority,
                               style: TextStyle(
                                 fontWeight: FontWeight.w700,
-                                fontSize: isTablet ? 15 : 10,
+                                fontSize: isTablet ? 15 : 9,
                                 color: Colors.white,
                               ),
                             ),
@@ -156,23 +162,113 @@ class CustomListTile extends StatelessWidget {
                       Text(
                         DateTimeHelperMethod.formatDate(todo.date),
                         style: TextStyle(
-                          fontSize: isTablet ? 14 : 9,
+                          fontSize: isTablet ? 12 : 8,
                           color: Colors.grey[600],
                         ),
                       ),
                       Text(
                         DateTimeHelperMethod.formatTime(todo.date),
                         style: TextStyle(
-                          fontSize: isTablet ? 14 : 9,
+                          fontSize: isTablet ? 12 : 8,
                           color: Colors.grey[600],
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(width: 5),
-                  GestureDetector(
-                    onTap: onTap,
-                    child: Icon(EvaIcons.editOutline),
+
+                  Builder(
+                    builder: (scaffoldContext) {
+                      return MenuAnchor(
+                        style: MenuStyle(
+                          fixedSize: WidgetStatePropertyAll(
+                            Size(50, double.nan),
+                          ),
+                          padding: WidgetStateProperty.all(EdgeInsets.zero),
+                          visualDensity: VisualDensity.compact,
+                          backgroundColor: WidgetStateProperty.all(
+                            HelperMethods.firstDarkSecondaryColor(context),
+                          ),
+                          elevation: WidgetStateProperty.all(1.0),
+                          shape: WidgetStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                        ),
+                        controller: _menuController,
+                        builder: (context, controller, child) {
+                          return IconButton(
+                            icon: Icon(
+                              Icons.more_vert,
+                              color: HelperMethods.firstWhiteColor(context),
+                            ),
+                            tooltip: "Options",
+                            onPressed: () {
+                              if (controller.isOpen) {
+                                controller.close();
+                              } else {
+                                HapticFeedback.selectionClick();
+                                controller.open();
+                              }
+                            },
+                          );
+                        },
+                        menuChildren: [
+                          MenuItemButton(
+                            style: ButtonStyle(
+                              padding: WidgetStateProperty.all(
+                                const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 6,
+                                ),
+                              ),
+                              minimumSize: WidgetStateProperty.all(
+                                const Size(0, 32),
+                              ), // reduce height
+                              visualDensity:
+                                  VisualDensity.compact, // makes it tighter
+                            ),
+                            child: Icon(
+                              EvaIcons.edit,
+                              color: HelperMethods.firstWhiteColor(context),
+                            ),
+                            onPressed: () {
+                              openAddTaskSheet(context, todo);
+                              HapticFeedback.selectionClick();
+                              _menuController.close();
+                            },
+                          ),
+                          Consumer<TaskProvider>(
+                            builder: (context, tp, _) {
+                              return MenuItemButton(
+                                style: ButtonStyle(
+                                  padding: WidgetStateProperty.all(
+                                    const EdgeInsets.symmetric(
+                                      horizontal: 6,
+                                      vertical: 6,
+                                    ),
+                                  ),
+                                  minimumSize: WidgetStateProperty.all(
+                                    const Size(0, 32),
+                                  ), // reduce height
+                                  visualDensity:
+                                      VisualDensity.compact, // makes it tighter
+                                ),
+                                child: const Icon(
+                                  Icons.delete,
+                                  color: Colors.redAccent,
+                                ),
+                                onPressed: () {
+                                  tp.deleteTask(todo, scaffoldContext);
+                                  HapticFeedback.mediumImpact();
+                                  _menuController.close();
+                                },
+                              );
+                            },
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ],
               ),

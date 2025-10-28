@@ -3,10 +3,10 @@ import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
+import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/helper_method.dart';
 import '../../todo/presentation/widgets/custom_list_tile.dart';
 import '../../todo/provider/task_provider.dart';
-import '../../todo/utils/bottom_sheet_helper.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -32,13 +32,18 @@ class _CalendarScreenState extends State<CalendarScreen> {
               SizedBox(
                 height: 300,
                 child: SfDateRangePicker(
-                  backgroundColor: isDark ? Colors.black : Colors.white,
+                  backgroundColor:
+                      isDark ? AppColors.primaryColorDarkMode : Colors.white,
                   // adapts
-                  selectionColor: HelperMethods.themeColor(context),
-                  startRangeSelectionColor: HelperMethods.themeColor(context),
-                  endRangeSelectionColor: HelperMethods.themeColor(context),
-                  todayHighlightColor: HelperMethods.themeColor(context),
-                  rangeSelectionColor: HelperMethods.themeColor(context),
+                  selectionColor: HelperMethods.firstWhiteColor(context),
+                  startRangeSelectionColor: HelperMethods.firstWhiteColor(
+                    context,
+                  ),
+                  endRangeSelectionColor: HelperMethods.firstWhiteColor(
+                    context,
+                  ),
+                  todayHighlightColor: HelperMethods.firstWhiteColor(context),
+                  rangeSelectionColor: HelperMethods.firstWhiteColor(context),
                   initialSelectedDate: taskProvider.selectedDate,
 
                   monthCellStyle: DateRangePickerMonthCellStyle(
@@ -64,7 +69,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
                     ),
-                    backgroundColor: isDark ? Colors.black : Colors.white,
+                    backgroundColor:
+                        isDark ? AppColors.primaryColorDarkMode : Colors.white,
                     textAlign: TextAlign.center,
                   ),
                   onSelectionChanged: (
@@ -100,7 +106,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w700,
-                                  color: HelperMethods.themeColor(context),
+                                  color: HelperMethods.firstWhiteColor(context),
                                 ),
                               ),
                             ],
@@ -121,14 +127,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               ),
                               direction: DismissDirection.endToStart,
                               onDismissed: (direction) {
-                                taskProvider.deleteTask(todo, context, isDark);
+                                taskProvider.deleteTask(todo, context);
                               },
                               child: CustomListTile(
                                 todo: todo,
                                 isCompleted: todo.isCompleted,
                                 onChanged:
                                     () => taskProvider.markAsComplete(todo),
-                                onTap: () => openAddTaskSheet(context, todo),
                               ),
                             );
                           },
