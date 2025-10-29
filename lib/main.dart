@@ -13,9 +13,7 @@ import 'features/todo/provider/priority_provider.dart';
 import 'features/todo/provider/task_provider.dart';
 
 Future<void> main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  // Keep splash until initialization completes
-  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  WidgetsFlutterBinding.ensureInitialized();
   bool onboarded = await OnBoardingServices.isOnboarded();
 
   runApp(
@@ -37,10 +35,7 @@ Future<void> main() async {
 
       child: MyApp(onboarded: onboarded),
     ),
-
-    // Once done, remove it
   );
-  // FlutterNativeSplash.remove();
 }
 
 class MyApp extends StatelessWidget {
