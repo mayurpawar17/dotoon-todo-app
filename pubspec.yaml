@@ -1,9 +1,5 @@
 name: dotoon_todo_app
-description: "A new Flutter project."
-
-
-
-
+description: "Dotoon is a productivity and task-management app designed to help users organize daily tasks efficiently with a clean, animated, and visually engaging interface. It focuses on simplicity, smooth UX, and delightful animations — making task management fun and intuitive."
 version: 1.0.0+1
 
 environment:
@@ -39,16 +35,6 @@ dependencies:
   flutter_launcher_icons: ^0.14.4
 
 
-#flutter_native_splash:
-#  color: "#ffffff"
-#  image: assets/dotoon3.png
-#  android_gravity: center
-#  android_12:
-#    image: assets/dotoon3.png
-#    icon_background_color: "#ffffff"
-#  fullscreen: true
-
-
 flutter_launcher_icons:
   android: true
   image_path: "assets/dotoon.png"
@@ -63,17 +49,7 @@ dev_dependencies:
 
   flutter_lints: ^5.0.0
   change_app_package_name: ^1.5.0
-  flutter_native_splash: ^2.4.7
 
-
-flutter_native_splash:
-  color: "#ffffff"
-  image: assets/dotoonPlaystore.png
-  android_gravity: center
-  android_12:
-    image: assets/dotoonPlaystore.png
-    icon_background_color: "#ffffff"
-  fullscreen: true
 
 flutter:
 
