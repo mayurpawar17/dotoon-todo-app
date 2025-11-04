@@ -1,6 +1,5 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
 
@@ -18,7 +17,7 @@ class AppThemes {
       elevation: 0,
       // centerTitle: true,
     ),
-    fontFamily: GoogleFonts.openSans().fontFamily,
+    fontFamily: 'openSans',
     textTheme: const TextTheme(
       bodyLarge: TextStyle(fontSize: 16, color: Colors.black87),
       bodyMedium: TextStyle(fontSize: 14, color: Colors.black54),
@@ -77,7 +76,7 @@ class AppThemes {
       foregroundColor: Colors.white,
       elevation: 0,
     ),
-    fontFamily: GoogleFonts.openSans().fontFamily,
+    fontFamily: 'openSans',
     textTheme: const TextTheme(
       bodyLarge: TextStyle(fontSize: 16, color: Colors.white),
       bodyMedium: TextStyle(fontSize: 14, color: Colors.white70),
